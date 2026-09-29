@@ -12,19 +12,23 @@ cannot carry one. The refusals are the product.
 $ ipo-price-model price --date 2026-10-14 --offer 21 --low 18 --high 20 --deal 450e6
 {
   "offer": 21.0,
-  "point": 25.4,
-  "lo": 20.1,
-  "hi": 33.7,
+  "point": <fitted median>,
+  "lo": <lower edge>,
+  "hi": <upper edge>,
   "nominal_coverage": 0.8,
   "published": true,
   "reason": null,
-  "regime_n": 14
+  "regime_n": <prior listings in the trailing window>
 }
 
 $ ipo-price-model price --date 2026-10-14 --offer 21 --deal 450e6        # no filed range
 { ..., "published": false, "reason": "no_range" }
 withheld: no_range — the interval above is shown for audit, not for use
 ```
+
+The numbers come from a model fitted on the frozen calendar; the shape above
+is what the command prints, and the values are whatever the data says on the
+day. No figure in this README is quoted from a run that has not been made.
 
 ## Why this exists
 
