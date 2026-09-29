@@ -1,0 +1,32 @@
+[project]
+name = "ipo-price-model"
+version = "0.1.0"
+description = "Price a company the day before it trades: a calibrated first-close interval from T-1 facts, and a gate that refuses to print when the evidence is thin."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Henry Zhang" }]
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "requests>=2.31",
+    "yfinance>=0.2.40",
+    "scikit-learn>=1.3",
+    "pyarrow>=14",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+ipo-price-model = "ipo_price_model.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["ipo_price_model*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
