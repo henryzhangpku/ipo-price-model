@@ -1,0 +1,160 @@
+<svg class="rich-terminal" viewBox="0 0 1848 660.0" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .terminal-2533760130-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .terminal-2533760130-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .terminal-2533760130-r1 { fill: #c5c8c6;font-weight: bold }
+.terminal-2533760130-r2 { fill: #c5c8c6 }
+.terminal-2533760130-r3 { fill: #868887 }
+.terminal-2533760130-r4 { fill: #d0b344 }
+.terminal-2533760130-r5 { fill: #cc555a;font-weight: bold }
+.terminal-2533760130-r6 { fill: #868887;font-style: italic; }
+.terminal-2533760130-r7 { fill: #98a84b;font-weight: bold }
+    </style>
+
+    <defs>
+    <clipPath id="terminal-2533760130-clip-terminal">
+      <rect x="0" y="0" width="1829.0" height="609.0" />
+    </clipPath>
+    <clipPath id="terminal-2533760130-line-0">
+    <rect x="0" y="1.5" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-1">
+    <rect x="0" y="25.9" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-2">
+    <rect x="0" y="50.3" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-3">
+    <rect x="0" y="74.7" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-4">
+    <rect x="0" y="99.1" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-5">
+    <rect x="0" y="123.5" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-6">
+    <rect x="0" y="147.9" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-7">
+    <rect x="0" y="172.3" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-8">
+    <rect x="0" y="196.7" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-9">
+    <rect x="0" y="221.1" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-10">
+    <rect x="0" y="245.5" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-11">
+    <rect x="0" y="269.9" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-12">
+    <rect x="0" y="294.3" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-13">
+    <rect x="0" y="318.7" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-14">
+    <rect x="0" y="343.1" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-15">
+    <rect x="0" y="367.5" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-16">
+    <rect x="0" y="391.9" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-17">
+    <rect x="0" y="416.3" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-18">
+    <rect x="0" y="440.7" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-19">
+    <rect x="0" y="465.1" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-20">
+    <rect x="0" y="489.5" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-21">
+    <rect x="0" y="513.9" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-22">
+    <rect x="0" y="538.3" width="1830" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2533760130-line-23">
+    <rect x="0" y="562.7" width="1830" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#292929" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1846" height="658" rx="8"/><text class="terminal-2533760130-title" fill="#c5c8c6" text-anchor="middle" x="923" y="27">ipo-price-model&#160;—&#160;the&#160;gate,&#160;and&#160;the&#160;tests&#160;that&#160;are&#160;the&#160;claims</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#terminal-2533760130-clip-terminal)">
+    
+    <g class="terminal-2533760130-matrix">
+    <text class="terminal-2533760130-r1" x="0" y="20" textLength="1061.4" clip-path="url(#terminal-2533760130-line-0)">$&#160;ipo-price-model&#160;price&#160;--date&#160;2026-10-14&#160;--offer&#160;21&#160;--deal&#160;450e6&#160;&#160;&#160;&#160;&#160;&#160;#&#160;no&#160;filed&#160;range</text><text class="terminal-2533760130-r2" x="1830" y="20" textLength="12.2" clip-path="url(#terminal-2533760130-line-0)">
+</text><text class="terminal-2533760130-r3" x="0" y="44.4" textLength="719.8" clip-path="url(#terminal-2533760130-line-1)">{&#160;&quot;offer&quot;:&#160;21.0,&#160;&quot;published&quot;:&#160;false,&#160;&quot;reason&quot;:&#160;&quot;no_range&quot;&#160;}</text><text class="terminal-2533760130-r2" x="1830" y="44.4" textLength="12.2" clip-path="url(#terminal-2533760130-line-1)">
+</text><text class="terminal-2533760130-r4" x="0" y="68.8" textLength="793" clip-path="url(#terminal-2533760130-line-2)">withheld:&#160;no_range&#160;—&#160;the&#160;interval&#160;is&#160;shown&#160;for&#160;audit,&#160;not&#160;for&#160;use</text><text class="terminal-2533760130-r2" x="1830" y="68.8" textLength="12.2" clip-path="url(#terminal-2533760130-line-2)">
+</text><text class="terminal-2533760130-r2" x="1830" y="93.2" textLength="12.2" clip-path="url(#terminal-2533760130-line-3)">
+</text><text class="terminal-2533760130-r1" x="0" y="117.6" textLength="890.6" clip-path="url(#terminal-2533760130-line-4)">The&#160;publication&#160;gate&#160;—&#160;checked&#160;in&#160;this&#160;order,&#160;first&#160;failure&#160;is&#160;the&#160;reason</text><text class="terminal-2533760130-r2" x="1830" y="117.6" textLength="12.2" clip-path="url(#terminal-2533760130-line-4)">
+</text><text class="terminal-2533760130-r1" x="24.4" y="142" textLength="134.2" clip-path="url(#terminal-2533760130-line-5)">reason&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r1" x="207.4" y="142" textLength="671" clip-path="url(#terminal-2533760130-line-5)">condition&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r1" x="927.2" y="142" textLength="817.4" clip-path="url(#terminal-2533760130-line-5)">why&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="1830" y="142" textLength="12.2" clip-path="url(#terminal-2533760130-line-5)">
+</text><text class="terminal-2533760130-r5" x="24.4" y="166.4" textLength="134.2" clip-path="url(#terminal-2533760130-line-6)">no_range&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="207.4" y="166.4" textLength="671" clip-path="url(#terminal-2533760130-line-6)">the&#160;filed&#160;range&#160;is&#160;missing&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="927.2" y="166.4" textLength="817.4" clip-path="url(#terminal-2533760130-line-6)">the&#160;most&#160;informative&#160;T-1&#160;fact&#160;is&#160;absent;&#160;printing&#160;would&#160;be&#160;guessing</text><text class="terminal-2533760130-r2" x="1830" y="166.4" textLength="12.2" clip-path="url(#terminal-2533760130-line-6)">
+</text><text class="terminal-2533760130-r5" x="24.4" y="190.8" textLength="134.2" clip-path="url(#terminal-2533760130-line-7)">thin_regime</text><text class="terminal-2533760130-r2" x="207.4" y="190.8" textLength="671" clip-path="url(#terminal-2533760130-line-7)">fewer&#160;than&#160;5&#160;comparable&#160;listings&#160;in&#160;the&#160;trailing&#160;window</text><text class="terminal-2533760130-r2" x="927.2" y="190.8" textLength="817.4" clip-path="url(#terminal-2533760130-line-7)">the&#160;market&#160;has&#160;not&#160;spoken&#160;recently&#160;enough&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="1830" y="190.8" textLength="12.2" clip-path="url(#terminal-2533760130-line-7)">
+</text><text class="terminal-2533760130-r5" x="24.4" y="215.2" textLength="134.2" clip-path="url(#terminal-2533760130-line-8)">too_wide&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="207.4" y="215.2" textLength="671" clip-path="url(#terminal-2533760130-line-8)">the&#160;80%&#160;interval&#160;spans&#160;more&#160;than&#160;60%&#160;of&#160;the&#160;offer&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="927.2" y="215.2" textLength="817.4" clip-path="url(#terminal-2533760130-line-8)">&#x27;between&#160;half&#160;and&#160;double&#x27;&#160;is&#160;honest,&#160;and&#160;useless&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r2" x="1830" y="215.2" textLength="12.2" clip-path="url(#terminal-2533760130-line-8)">
+</text><text class="terminal-2533760130-r6" x="0" y="239.6" textLength="817.4" clip-path="url(#terminal-2533760130-line-9)">The&#160;gate&#160;never&#160;narrows&#160;an&#160;interval.&#160;It&#160;decides&#160;whether&#160;to&#160;show&#160;one.</text><text class="terminal-2533760130-r2" x="1830" y="239.6" textLength="12.2" clip-path="url(#terminal-2533760130-line-9)">
+</text><text class="terminal-2533760130-r2" x="1830" y="264" textLength="12.2" clip-path="url(#terminal-2533760130-line-10)">
+</text><text class="terminal-2533760130-r1" x="0" y="288.4" textLength="1037" clip-path="url(#terminal-2533760130-line-11)">$&#160;pytest&#160;-v&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;#&#160;the&#160;claims&#160;in&#160;METHODOLOGY.md,&#160;executable&#160;—&#160;no&#160;network,&#160;no&#160;keys</text><text class="terminal-2533760130-r2" x="1830" y="288.4" textLength="12.2" clip-path="url(#terminal-2533760130-line-11)">
+</text><text class="terminal-2533760130-r2" x="0" y="312.8" textLength="707.6" clip-path="url(#terminal-2533760130-line-12)">test_leakage_assertions_raise&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="312.8" textLength="73.2" clip-path="url(#terminal-2533760130-line-12)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="312.8" textLength="963.8" clip-path="url(#terminal-2533760130-line-12)">&#160;&#160;&#160;a&#160;label&#160;on&#160;or&#160;before&#160;T-1,&#160;a&#160;shuffled&#160;split,&#160;an&#160;undeclared&#160;feature:&#160;all&#160;raise</text><text class="terminal-2533760130-r2" x="1830" y="312.8" textLength="12.2" clip-path="url(#terminal-2533760130-line-12)">
+</text><text class="terminal-2533760130-r2" x="0" y="337.2" textLength="707.6" clip-path="url(#terminal-2533760130-line-13)">test_regime_uses_only_strictly_earlier_listings&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="337.2" textLength="73.2" clip-path="url(#terminal-2533760130-line-13)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="337.2" textLength="829.6" clip-path="url(#terminal-2533760130-line-13)">&#160;&#160;&#160;the&#160;regime&#160;sees&#160;nothing&#160;that&#160;closed&#160;on&#160;or&#160;after&#160;the&#160;decision&#160;date</text><text class="terminal-2533760130-r2" x="1830" y="337.2" textLength="12.2" clip-path="url(#terminal-2533760130-line-13)">
+</text><text class="terminal-2533760130-r2" x="0" y="361.6" textLength="707.6" clip-path="url(#terminal-2533760130-line-14)">test_regime_is_nan_below_the_floor&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="361.6" textLength="73.2" clip-path="url(#terminal-2533760130-line-14)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="361.6" textLength="622.2" clip-path="url(#terminal-2533760130-line-14)">&#160;&#160;&#160;fewer&#160;than&#160;5&#160;comparables:&#160;unknown,&#160;not&#160;estimated</text><text class="terminal-2533760130-r2" x="1830" y="361.6" textLength="12.2" clip-path="url(#terminal-2533760130-line-14)">
+</text><text class="terminal-2533760130-r2" x="0" y="386" textLength="707.6" clip-path="url(#terminal-2533760130-line-15)">test_build_declares_exactly_the_feature_columns&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="386" textLength="73.2" clip-path="url(#terminal-2533760130-line-15)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="386" textLength="658.8" clip-path="url(#terminal-2533760130-line-15)">&#160;&#160;&#160;the&#160;feature&#160;list&#160;is&#160;the&#160;declared&#160;list,&#160;nothing&#160;more</text><text class="terminal-2533760130-r2" x="1830" y="386" textLength="12.2" clip-path="url(#terminal-2533760130-line-15)">
+</text><text class="terminal-2533760130-r2" x="0" y="410.4" textLength="707.6" clip-path="url(#terminal-2533760130-line-16)">test_conformal_coverage_holds_on_a_held_out_window&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="410.4" textLength="73.2" clip-path="url(#terminal-2533760130-line-16)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="410.4" textLength="695.4" clip-path="url(#terminal-2533760130-line-16)">&#160;&#160;&#160;80%&#160;nominal&#160;coverage&#160;holds&#160;on&#160;data&#160;the&#160;model&#160;never&#160;saw</text><text class="terminal-2533760130-r2" x="1830" y="410.4" textLength="12.2" clip-path="url(#terminal-2533760130-line-16)">
+</text><text class="terminal-2533760130-r2" x="0" y="434.8" textLength="707.6" clip-path="url(#terminal-2533760130-line-17)">test_prices_map_back_multiplicatively&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="434.8" textLength="73.2" clip-path="url(#terminal-2533760130-line-17)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="434.8" textLength="878.4" clip-path="url(#terminal-2533760130-line-17)">&#160;&#160;&#160;log-space&#160;interval&#160;maps&#160;to&#160;price;&#160;the&#160;lower&#160;edge&#160;cannot&#160;go&#160;below&#160;zero</text><text class="terminal-2533760130-r2" x="1830" y="434.8" textLength="12.2" clip-path="url(#terminal-2533760130-line-17)">
+</text><text class="terminal-2533760130-r2" x="0" y="459.2" textLength="707.6" clip-path="url(#terminal-2533760130-line-18)">test_gate_reasons_in_declared_order&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="459.2" textLength="73.2" clip-path="url(#terminal-2533760130-line-18)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="459.2" textLength="536.8" clip-path="url(#terminal-2533760130-line-18)">&#160;&#160;&#160;no_range,&#160;then&#160;thin_regime,&#160;then&#160;too_wide</text><text class="terminal-2533760130-r2" x="1830" y="459.2" textLength="12.2" clip-path="url(#terminal-2533760130-line-18)">
+</text><text class="terminal-2533760130-r2" x="0" y="483.6" textLength="707.6" clip-path="url(#terminal-2533760130-line-19)">test_gate_never_changes_the_interval&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="483.6" textLength="73.2" clip-path="url(#terminal-2533760130-line-19)">PASSED</text><text class="terminal-2533760130-r3" x="780.8" y="483.6" textLength="585.6" clip-path="url(#terminal-2533760130-line-19)">&#160;&#160;&#160;the&#160;gate&#160;decides&#160;whether&#160;to&#160;print,&#160;never&#160;what</text><text class="terminal-2533760130-r2" x="1830" y="483.6" textLength="12.2" clip-path="url(#terminal-2533760130-line-19)">
+</text><text class="terminal-2533760130-r2" x="0" y="508" textLength="707.6" clip-path="url(#terminal-2533760130-line-20)">test_label_one_takes_the_first_close_on_or_after_listing&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="508" textLength="73.2" clip-path="url(#terminal-2533760130-line-20)">PASSED</text><text class="terminal-2533760130-r2" x="1830" y="508" textLength="12.2" clip-path="url(#terminal-2533760130-line-20)">
+</text><text class="terminal-2533760130-r2" x="0" y="532.4" textLength="707.6" clip-path="url(#terminal-2533760130-line-21)">test_priced_vs_range_codes&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="532.4" textLength="73.2" clip-path="url(#terminal-2533760130-line-21)">PASSED</text><text class="terminal-2533760130-r2" x="1830" y="532.4" textLength="12.2" clip-path="url(#terminal-2533760130-line-21)">
+</text><text class="terminal-2533760130-r2" x="0" y="556.8" textLength="707.6" clip-path="url(#terminal-2533760130-line-22)">test_parse_price&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="556.8" textLength="73.2" clip-path="url(#terminal-2533760130-line-22)">PASSED</text><text class="terminal-2533760130-r2" x="1830" y="556.8" textLength="12.2" clip-path="url(#terminal-2533760130-line-22)">
+</text><text class="terminal-2533760130-r2" x="0" y="581.2" textLength="707.6" clip-path="url(#terminal-2533760130-line-23)">test_normalise_tags_and_derives&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</text><text class="terminal-2533760130-r7" x="707.6" y="581.2" textLength="73.2" clip-path="url(#terminal-2533760130-line-23)">PASSED</text><text class="terminal-2533760130-r2" x="1830" y="581.2" textLength="12.2" clip-path="url(#terminal-2533760130-line-23)">
+</text><text class="terminal-2533760130-r7" x="0" y="605.6" textLength="109.8" clip-path="url(#terminal-2533760130-line-24)">12&#160;passed</text><text class="terminal-2533760130-r2" x="1830" y="605.6" textLength="12.2" clip-path="url(#terminal-2533760130-line-24)">
+</text>
+    </g>
+    </g>
+</svg>
