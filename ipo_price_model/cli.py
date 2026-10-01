@@ -1,4 +1,4 @@
-"""cli.py — `ipo-price-model universe | labels | evaluate | price`."""
+"""cli.py — `ipo-price-model universe | ranges | labels | evaluate | price`."""
 from __future__ import annotations
 
 import argparse
@@ -15,6 +15,14 @@ def _universe(a) -> None:
     print(f"universe: {len(df)} priced listings {a.date_from}..{a.date_to} -> {UNIVERSE_PARQUET}")
     print(f"  core: {len(c)}   spac: {int(df['is_spac'].sum())}   unit/warrant: {int(df['is_unit'].sum())}"
           f"   range kept: {int(df['has_range'].sum())}")
+
+
+def _ranges(a) -> None:
+    from .filings import build_ranges
+    from .universe import core
+    uni = build_ranges(overwrite=a.overwrite)
+    c = core(uni)
+    print(f"ranges: {int(c['has_range'].sum())}/{len(c)} core listings carry a filed range from EDGAR")
 
 
 def _labels(a) -> None:
@@ -57,7 +65,13 @@ def _price(a) -> None:
                          "status": "priced", "price_raw": "", "price_low": a.low, "price_high": a.high,
                          "offer_price": a.offer, "has_range": a.low is not None and a.high is not None,
                          "shares": None, "deal_usd": a.deal, "is_spac": False, "is_unit": False}])
-    Xn = build(row, lab)
+    # the regime feature must see the real history: build over every past listing plus this row
+    import warnings
+    hist = df[[c for c in row.columns if c in df.columns]]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", FutureWarning)
+        Xn = build(pd.concat([hist, row], ignore_index=True), pd.concat(
+            [lab, pd.DataFrame([{"symbol": "NEW"}])], ignore_index=True)).iloc[[-1]].reset_index(drop=True)
     prices = model.predict_price(Xn, row["offer_price"])
     g = gate_mod.apply(Xn, prices, row["offer_price"])
     out = {"offer": a.offer, "point": float(prices["point"].iloc[0]), "lo": float(prices["lo"].iloc[0]),
@@ -66,7 +80,7 @@ def _price(a) -> None:
            "regime_n": int(Xn["regime_n"].iloc[0])}
     print(json.dumps(out, indent=2))
     if not out["published"]:
-        print(f"withheld: {out['reason']} — the interval above is shown for audit, not for use")
+        print(f"withheld: {out['reason']}: the interval above is shown for audit, not for use")
 
 
 def main() -> None:
@@ -77,6 +91,9 @@ def main() -> None:
     u.add_argument("--to", dest="date_to", default="2025-12-31")
     u.add_argument("--overwrite", action="store_true")
     u.set_defaults(fn=_universe)
+    rg = sub.add_parser("ranges", help="recover each deal's filed range from its last S-1/A before listing (EDGAR)")
+    rg.add_argument("--overwrite", action="store_true")
+    rg.set_defaults(fn=_ranges)
     l = sub.add_parser("labels", help="freeze first closes and post-listing returns")
     l.add_argument("--overwrite", action="store_true")
     l.set_defaults(fn=_labels)

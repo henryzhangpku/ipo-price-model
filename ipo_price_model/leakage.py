@@ -36,3 +36,9 @@ def assert_regime_uses_only_past(regime_dates: pd.Series, decision_dates: pd.Ser
     bad = (pd.to_datetime(regime_dates) >= pd.to_datetime(decision_dates)).sum()
     if bad:
         raise LeakageError(f"{int(bad)} regime rows aggregate listings on or after the decision date")
+
+
+def assert_filing_before_listing(filed: pd.Timestamp, first_trade: pd.Timestamp) -> None:
+    """A filed range may only come from a registration amendment filed before the first trading day."""
+    if pd.Timestamp(filed) >= pd.Timestamp(first_trade):
+        raise LeakageError(f"range filed {pd.Timestamp(filed).date()} is not before first trade {pd.Timestamp(first_trade).date()}")

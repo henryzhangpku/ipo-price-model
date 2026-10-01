@@ -62,7 +62,7 @@ class ConformalQuantileModel:
         self.q_hi_ = self._gbr(hi).fit(X_train, y_train)
         self.q_med_ = self._gbr(0.5).fit(X_train, y_train)
         # split-conformal widening on the disjoint calibration window
-        pl, ph = self.q_lo_.predict(X_calib), self.q_hi_.predict(X_calib)
+        pl, _, ph = _rearrange(self.q_lo_.predict(X_calib), self.q_med_.predict(X_calib), self.q_hi_.predict(X_calib))
         scores = np.maximum(pl - y_calib, y_calib - ph)
         n = len(scores)
         k = int(np.ceil((n + 1) * (1 - self.alpha)))
@@ -76,10 +76,12 @@ class ConformalQuantileModel:
     def predict_log(self, X: pd.DataFrame) -> pd.DataFrame:
         X = X[FEATURES]
         s = self.conformal_shift_ or 0.0
+        lo, med, hi = _rearrange(self.q_lo_.predict(X), self.q_med_.predict(X), self.q_hi_.predict(X))
+        # a negative conformal shift narrows the band; never past the median
         return pd.DataFrame({
-            "q_lo": self.q_lo_.predict(X) - s,
-            "q_med": self.q_med_.predict(X),
-            "q_hi": self.q_hi_.predict(X) + s,
+            "q_lo": np.minimum(lo - s, med),
+            "q_med": med,
+            "q_hi": np.maximum(hi + s, med),
             "ref_lo": self.ref_lo_,
             "ref_hi": self.ref_hi_,
         }, index=X.index)
@@ -95,6 +97,13 @@ class ConformalQuantileModel:
             "ref_lo": o * np.exp(q["ref_lo"].to_numpy()),
             "ref_hi": o * np.exp(q["ref_hi"].to_numpy()),
         }, index=X.index)
+
+
+def _rearrange(lo: np.ndarray, med: np.ndarray, hi: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Sort the three fitted quantiles row by row so they never cross (monotone rearrangement,
+    Chernozhukov, Fernandez-Val & Galichon, 2010). Separately fitted quantile models can cross."""
+    q = np.sort(np.vstack([lo, med, hi]), axis=0)
+    return q[0], q[1], q[2]
 
 
 def coverage(lo: np.ndarray, hi: np.ndarray, y: np.ndarray) -> float:

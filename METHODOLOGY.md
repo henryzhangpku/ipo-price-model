@@ -22,8 +22,21 @@ not on it.
 
 **Deal facts**, from the calendar row: log offer price, log deal size, where
 the offer priced against the filed range (below / within / at the top /
-above), the width of that range, whether a range survived at all, and whether
+above), the width of that range, whether a range was found at all, and whether
 the venue is a major exchange.
+
+**Where the filed range comes from.** Not the calendar: a public IPO calendar
+overwrites the range with the offer price once a deal prices, so a historical
+pull carries no ranges at all (the first run of this repo found zero). The
+range is read instead from the cover of the registration statement itself,
+the S-1/A (F-1/A for foreign issuers, S-11/A for REITs) on SEC EDGAR:
+"the initial public offering price will be between $15.00 and $17.00 per
+share". Only amendments filed **strictly before the first trading day** are
+read, newest first, and the first cover that states a range wins, so a
+re-range filed before pricing counts and the final prospectus (424B4, filed
+after pricing) never does. `leakage.assert_filing_before_listing` raises on a
+violation. Fixed-price small-cap deals print no range on the cover; those stay
+`no_range` and are withheld, which is the correct answer for them.
 
 **Regime**: what the previous listings did. For each listing, the median and
 interquartile range of the first-day move across listings whose first close
@@ -46,6 +59,23 @@ constant. Under exchangeability that yields marginal coverage of at least
 `1 − α` in finite samples, with no assumption about the error distribution
 (conformalised quantile regression, Romano, Patterson & Candès 2019). The
 default `α = 0.20`: an 80% interval.
+
+The three quantile models are fitted separately, so they can cross. They are
+sorted row by row before calibration and before every prediction (monotone
+rearrangement, Chernozhukov, Fernández-Val & Galichon 2010), and a negative
+conformal shift never narrows an edge past the median. This was a bug in the
+first version, found by the `price` command printing a point outside its own
+band, and fixed before the results below were produced.
+
+**The label, and what counts as one.** The price source adjusts history for
+every split up to today; the offer price is not adjusted. The first close is
+therefore restored to the price that printed: the split-adjusted close times
+the product of every split ratio after that day. Two data-validity bounds were
+fixed before any result and are applied to every listing: the first print
+must land within seven days of the listing date, and the first close must lie
+between 0.1x and 30x the offer. A listing outside them is a data error
+(usually a ticker since reused by another company), not an outcome, and is
+dropped and counted.
 
 ## 4. The reference the model has to beat
 
@@ -96,6 +126,7 @@ private.
 
 ## 9. Not in this version
 
-Range revisions from the S-1/A sequence (needs EDGAR); underwriter identity;
+The full re-range path through the S-1/A sequence (only the last stated range
+is used); underwriter identity;
 sector; a 30-session horizon model (the label is recorded, the model is not
 fitted). Each is a change to §2 and gets its own preregistration.
