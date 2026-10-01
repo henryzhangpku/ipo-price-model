@@ -10,3 +10,6 @@ data/closes/
 results/*.json
 !results/.gitkeep
 .env
+data/*.json
+data/filings/
+data/run.log

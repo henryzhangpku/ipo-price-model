@@ -152,3 +152,49 @@ def test_gate_never_changes_the_interval():
     before = prices.copy()
     gate_mod.apply(feats, prices, pd.Series([10.0]))
     pd.testing.assert_frame_equal(prices, before)
+
+
+# ------------------------------------------------------------------ filed range from EDGAR
+
+from ipo_price_model.filings import html_to_text, parse_range
+from ipo_price_model.leakage import assert_filing_before_listing
+
+
+def test_parse_range_reads_the_cover_sentence():
+    cover = html_to_text(b"<p>It is currently estimated that the initial public offering price will be "
+                         b"between&nbsp;$15.00 and $17.00 per share. We have applied to list</p>")
+    assert parse_range(cover) == (15.0, 17.0)
+    assert parse_range("between US$ 9.50 and US$ 11.50 per ADS") == (9.5, 11.5)
+    assert parse_range("the initial public offering price per share will be between $18.00 and $20.00. We") == (18.0, 20.0)
+
+
+def test_parse_range_rejects_what_is_not_a_price_range():
+    assert parse_range("an assumed initial public offering price of $4.00 per share") is None
+    assert parse_range("between $1 and $5 million of expenses") is None          # no 'per'
+    assert parse_range("between $20.00 and $18.00 per share") is None            # inverted
+    assert parse_range("between $5.00 and $50.00 per share") is None             # not a filed range
+
+
+def test_a_range_filed_on_or_after_first_trade_raises():
+    assert_filing_before_listing(pd.Timestamp("2024-03-21"), pd.Timestamp("2024-03-28"))
+    with pytest.raises(LeakageError):
+        assert_filing_before_listing(pd.Timestamp("2024-03-28"), pd.Timestamp("2024-03-28"))
+
+
+def test_a_later_reverse_split_does_not_inflate_the_first_close():
+    # offer $10, first print $12; a 1-for-10 reverse split a year later makes the source's
+    # split-adjusted history show $120 for that day
+    idx = pd.bdate_range("2021-03-01", periods=400)
+    adjusted = pd.Series(120.0, index=idx)
+    splits = pd.Series({idx[300]: 0.1})
+    lab = label_one(adjusted, idx[0], 10.0, splits=splits)
+    assert lab["first_close"] == pytest.approx(12.0)
+    assert lab["first_day"] == pytest.approx(0.2)
+    assert label_one(pd.Series(-1.0, index=idx), idx[0], 10.0)["first_close"] is None
+
+
+def test_fitted_quantiles_never_cross():
+    from ipo_price_model.model import _rearrange
+    lo, med, hi = _rearrange(np.array([0.3, -0.1]), np.array([0.1, 0.0]), np.array([0.2, 0.4]))
+    assert np.all(lo <= med) and np.all(med <= hi)
+    assert list(lo) == [0.1, -0.1] and list(hi) == [0.3, 0.4]
