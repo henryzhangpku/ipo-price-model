@@ -77,6 +77,9 @@ td{font-family:var(--mono)}
 footer{margin-top:56px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
 .check{font:12px var(--mono);color:var(--muted)}
 .check.bad{color:var(--warn)}
+.hero{margin-top:24px;padding:24px}
+.hero .k{font-size:14px;color:var(--muted)}
+.hero .hv{font:600 clamp(40px,9vw,64px)/1.1 var(--mono);color:var(--accent);letter-spacing:-.03em;margin:6px 0}
 body.nomodel .needs-model{display:none}
 .pending{display:none}
 body.nomodel .pending{display:block}
@@ -88,18 +91,15 @@ body.nomodel .pending{display:block}
   <h1>Pricing Anthropic (ANT) the night before it trades</h1>
   <p class="lede">Anthropic filed its S-1 on 26 October 2026 for a Nasdaq Global Select listing under <b>ANT</b>, reported for the week of 16 November. This page runs the fitted model from <a href="https://github.com/henryzhangpku/ipo-price-model">ipo-price-model</a> in your browser, tree by tree: an 80% conformal interval for the first close, from T-1 facts only, and a gate that withholds the number when the evidence can't support one.</p>
 
-  <div class="panel status" id="today">
-    <div><span class="pill withheld">withheld · no_range</span></div>
-    <div>
-      <b>Today's answer: no number.</b> The public S-1 leaves the price range and share count blank. Where a deal prices against its filed range is the most informative fact a listing has the night before, and without it the gate refuses to publish. When the S-1/A with a range is filed, type it in below.
-      <div class="note" style="margin-top:6px">Everything below the line is a <b>scenario</b>: the range, offer and deal size are placeholders you set, not reported figures.</div>
-    </div>
-  </div>
-
   <div class="needs-model">
-  <h2>What the model says, by where ANT prices</h2>
-  <p class="note" style="margin-top:-6px">Live output for a <span id="hdDeal"></span> raise on Nasdaq Global Select, decision date 16 November, with a placeholder range of <span id="hdRange"></span>. The answers are shown as moves from the offer, so the scenario's share price doesn't drive them. One caveat: the offer level is itself a model input, so a different share price shifts them a little.</p>
-  <div class="panel tablewrap"><table id="headline"><thead><tr><th>if ANT prices…</th><th></th><th>first-day median</th><th>80% band</th><th>gate</th></tr></thead><tbody></tbody></table></div>
+  <div class="panel hero">
+    <div class="k">If ANT prices at the top of its range, the model's first day</div>
+    <div class="hv" id="heroMove"></div>
+    <div class="k" id="heroBand"></div>
+  </div>
+  <h2>By where ANT prices against its range</h2>
+  <div class="panel tablewrap"><table id="headline"><thead><tr><th>if ANT prices…</th><th></th><th>first-day median</th><th>80% band</th><th>gate</th></tr></thead><tbody></tbody></table>
+  <p class="note">A <span id="hdDeal"></span> raise on Nasdaq Global Select, decision date 16 November. The S-1 doesn't state a range yet, so these use a placeholder range of <span id="hdRange"></span>; answers are shown as moves from the offer. Enter the real range below once the S-1/A is filed.</p></div>
   </div>
 
   <div class="panel pending" style="margin-top:16px"><b>The scenario calculator is being re-fitted.</b> The model is re-fitting on listings through 14 Nov 2026 so the regime is current for 16 November. When it lands, this space becomes the live calculator: type the S-1/A range, the offer and the deal size, and get the 80% band and the gate's verdict.</div>
@@ -343,6 +343,9 @@ body.nomodel .pending{display:block}
       const p = price({...base, offer: o});
       tb2.insertAdjacentHTML('beforeend', `<tr><td>${lab}</td><td></td><td>${pct(p.point/o-1)}</td><td>${pct(p.lo/o-1)} to ${pct(p.hi/o-1)}</td><td>${p.published ? '<span class="pill published">published</span>' : '<span class="pill withheld">' + p.reason + '</span>'}</td></tr>`);
     });
+    const ph = price({...base, offer: 44});
+    $('heroMove').textContent = pct(ph.point/44-1);
+    $('heroBand').textContent = `median · 80% band ${pct(ph.lo/44-1)} to ${pct(ph.hi/44-1)} · ${bn(base.deal)} raise`;
     const p0 = price({...base, low: null, high: null, offer: 44});
     tb2.insertAdjacentHTML('beforeend', `<tr><td>no range filed (today)</td><td></td><td>${pct(p0.point/44-1)}</td><td>${pct(p0.lo/44-1)} to ${pct(p0.hi/44-1)}</td><td><span class="pill withheld">${p0.reason}</span></td></tr>`);
   }
