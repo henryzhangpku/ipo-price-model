@@ -152,6 +152,7 @@ input:disabled{opacity:.45}
 
 footer{margin:72px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 footer p{margin:6px 0}
+footer .intro{margin-top:14px;color:var(--ink)}
 .check{font:12px var(--mono);color:var(--muted)}
 .check.bad{color:var(--warn)}
 
@@ -185,14 +186,13 @@ body.nomodel .pending{display:block;padding:22px}
 <div class="wrap">
   <nav class="top">
     <div class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 L10 6 L13 12" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M12 20 L17 10 L21 20" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>IPO Price Model</div>
-    <div class="links"><a class="opt" href="#calc">Calculator</a><a class="opt" href="#record">Track record</a><a class="btn sm" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow on LinkedIn</a></div>
+    <div class="links"><a class="opt" href="#calc">Calculator</a><a class="opt" href="#record">Track record</a><a href="https://github.com/henryzhangpku/ipo-price-model">GitHub</a></div>
   </nav>
 
   <header class="hero">
     <h1>Pricing Anthropic the night before it trades</h1>
     <p>A calibrated 80% band for ANT's first close, from only what's public the night before it lists. It runs live in your browser, and it says plainly when the evidence can't support a number.</p>
-    <div class="btns"><a class="btn" href="#calc">Try your own range</a><a class="btn ghost" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow the call on LinkedIn</a></div>
-    <p class="byline">Built by <a href="#author">Henry Zhang</a> · open source on <a href="https://github.com/henryzhangpku/ipo-price-model">GitHub</a></p>
+    <div class="btns"><a class="btn" href="#calc">Try your own range</a><a class="btn ghost" href="#record">See the track record</a></div>
   </header>
 
   <div class="card window needs-model">
@@ -230,13 +230,6 @@ body.nomodel .pending{display:block;padding:22px}
     </div>
   </section>
 
-
-  <section class="needs-model">
-    <div class="card ctastrip">
-      <div><div class="eyebrow">The live call</div><p>I'll post the model's band the night ANT prices, then score it against the first close, hit or miss, in public.</p></div>
-      <div class="btns left"><a class="btn" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow on LinkedIn</a><a class="btn ghost" href="https://henryzhang.substack.com" target="_blank" rel="noopener">Get it by email</a></div>
-    </div>
-  </section>
 
   <section id="calc" class="needs-model">
     <div class="eyebrow">Calculator</div>
@@ -310,21 +303,12 @@ body.nomodel .pending{display:block;padding:22px}
     </div>
   </section>
 
-  <section id="author">
-    <div class="card about">
-      <div class="who">
-        <div class="avatar">HZ</div>
-        <div class="whotext"><b>Built by Henry Zhang</b><span>Quantitative engineer. Open source on GitHub.</span></div>
-        <div class="btns left"><a class="btn" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Connect on LinkedIn</a><a class="btn ghost" href="https://github.com/henryzhangpku" target="_blank" rel="noopener">GitHub</a></div>
-      </div>
-    </div>
-  </section>
-
   <footer>
     <div id="selfcheck" class="check">checking the page against the Python model…</div>
     <p class="needs-model">Model fitted by <code>docs/export_model.py</code> on listings through <span id="through"></span>: <span id="ntrain"></span>.</p>
     <p>Filed facts: Anthropic's S-1 of 26 Oct 2026 names Nasdaq Global Select and the ticker ANT, and leaves the range and share count blank. The $60–100B raise and the week of 16 November are press reports, not filings. Not affiliated with Anthropic. Research tooling, not investment advice; a first-day move is not a return an investor can capture.</p>
-    <p><a href="https://github.com/henryzhangpku/ipo-price-model">Code (MIT)</a> · <a href="https://github.com/henryzhangpku/ipo-price-model/blob/main/METHODOLOGY.md">Methodology</a> · © 2026 Henry Zhang · <a href="https://www.linkedin.com/in/henryzhang99/">LinkedIn</a> · <a href="https://henryzhang.substack.com">Substack</a></p>
+    <p><a href="https://github.com/henryzhangpku/ipo-price-model">Code (MIT)</a> · <a href="https://github.com/henryzhangpku/ipo-price-model/blob/main/METHODOLOGY.md">Methodology</a></p>
+    <p class="intro">Built by Henry Zhang, quantitative engineer · <a href="https://www.linkedin.com/in/henryzhang99/">LinkedIn</a> · <a href="https://github.com/henryzhangpku">GitHub</a></p>
   </footer>
 </div>
 
