@@ -9,9 +9,11 @@ name: ANT tracker
 
 on:
   schedule:
-    # 13:35 UTC (09:35 New York), after the morning's EDGAR filings and the open.
+    # 13:35 UTC: 08:35 New York / 05:35 Pacific in winter (an hour later in summer),
+    # after the overnight and early-morning EDGAR filings.
     - cron: "35 13 * * 1-5"
-    # 02:35 UTC (21:35/22:35 New York), after a deal prices in the evening.
+    # 02:35 UTC: 21:35 New York / 18:35 Pacific in winter (an hour later in summer),
+    # after a deal prices in the evening.
     - cron: "35 2 * * 2-6"
   workflow_dispatch:
 

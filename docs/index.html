@@ -536,8 +536,12 @@ body.nomodel .pending{display:block;padding:22px}
       `<li class="${i > at ? 'todo' : i === at && LR.stage !== 'scored' ? 'done now' : 'done'}"><b>${t}</b>${d}</li>`).join('');
     const rs = LR.regime.status || {};
     const ago = (Date.now() - Date.parse(LR.run_utc)) / 36e5;
+    // the visitor's own time zone; the UTC stamp stays in the tooltip and the record
+    let checked;
+    try { checked = new Date(LR.run_utc).toLocaleString(undefined, {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'}); }
+    catch (e) { checked = LR.run_utc.replace('T', ' ').replace('Z', ' UTC'); }
     $('trkMeta').innerHTML = [
-      `<span>Last checked <b>${LR.run_utc.replace('T', ' ').replace('Z', ' UTC')}</b>${ago < 48 ? '' : ' <span style="color:var(--warn)">(stale)</span>'}</span>`,
+      `<span>Last checked <b title="${LR.run_utc}">${checked}</b>${ago < 72 ? '' : ' <span style="color:var(--warn)">(stale)</span>'}</span>`,
       `<span>Record <b>#${LR.seq}</b> of ${L.history.length} · <a href="${REPO}/blob/main/tracker/tape.jsonl">daily record</a> · <a href="${REPO}/actions/workflows/track.yml">job runs</a></span>`,
       `<span>Model fingerprint <code title="SHA-256 of docs/model.json">${LR.model_sha256.slice(0, 12)}</code> · frozen</span>`,
       `<span>IPO data: ${rs.ok === false ? '<span style="color:var(--warn)">source unavailable, last values kept</span>' : 'Nasdaq calendar + first closes'}${(rs.added || []).length ? ' · added ' + rs.added.join(', ') : ''}</span>`,
