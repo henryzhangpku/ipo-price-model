@@ -270,6 +270,17 @@ body.nomodel .pending{display:block;padding:22px}
     </div>
   </section>
 
+  <section class="needs-model">
+    <div class="eyebrow">Sensitivity</div>
+    <h2 class="sh">What moves the number, and what doesn't</h2>
+    <p class="sd" id="sensLead"></p>
+    <div class="card tablewrap">
+      <table id="sens"><thead><tr><th>If the filed range is</th><th>Median at the top</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
+      <p class="tnote" id="sensDeal"></p>
+      <p class="tnote" id="sensCov"></p>
+    </div>
+  </section>
+
 
   <section id="calc" class="needs-model">
     <div class="eyebrow">Calculator</div>
@@ -462,6 +473,7 @@ body.nomodel .pending{display:block;padding:22px}
       ? `Median first close against the offer if ANT prices at the top of its filed $${base.low}–$${base.high} range, for a ${bn(dealAt(TOP))} raise. On pricing night the actual offer replaces the scenario.`
       : `Median first close against the offer, for a ${bn(base.deal)} raise priced at the top of a placeholder $${base.low}–$${base.high} range. Today the S-1 has no range, so the gate withholds; this is the number it gives the moment one is filed.`;
   }
+  if (!result) $('heroBand').textContent += ' The 80% is nominal: in the backtest, published bands caught 68%.';
   if (LR){
     const reg = LR.filing.registration || {};
     const bits = [`${reg.form || 'S-1'} filed ${reg.date || '26 Oct 2026'}`];
@@ -500,6 +512,28 @@ body.nomodel .pending{display:block;padding:22px}
     s += `<text class="hl" x="${X(TOP)+10}" y="${Y(ph.point/TOP-1)-10}">${pct(ph.point/TOP-1)}</text>`;
     svg.innerHTML = s;
   })();
+
+  // ---- sensitivity: the range's width is an input; the deal size above a few billion is not
+  {
+    const w0 = (TOP - base.low) / TOP;
+    const lows = [...new Set([0.05, w0, 0.18].map(w => TOP >= 20 ? Math.round(TOP * (1 - w)) : Math.round(TOP * (1 - w) * 100) / 100))].sort((x, y) => y - x);
+    const tb = document.querySelector('#sens tbody');
+    lows.forEach(lo => {
+      const p = price({...base, low: lo, deal: dealAt(TOP), offer: TOP});
+      const tag = lo === base.low ? (filed ? ' (filed)' : ' (placeholder)') : (lo > base.low ? ' (narrower)' : ' (wider)');
+      tb.insertAdjacentHTML('beforeend', `<tr${lo === base.low ? ' class="hl"' : ''}><td>$${lo}–$${TOP}${tag}</td><td>${pct(p.point/TOP-1)}</td><td>${pct(p.lo/TOP-1)} to ${pct(p.hi/TOP-1)}</td><td>${pill(p)}</td></tr>`);
+    });
+    $('sensLead').textContent = filed
+      ? 'The range on EDGAR is an input, not just a reference point: the same top-of-range offer gives a different answer for a narrower or wider range. The filed range is highlighted.'
+      : `The headline uses a placeholder $${base.low}–$${base.high} range, and its width matters: the same $${TOP} offer at the top of a narrower or wider range gives a different answer. The filed range replaces the placeholder the day it appears on EDGAR.`;
+    const sizes = [5e9, 20e9, 60e9, 100e9].map(d => price({...base, deal: d, offer: TOP}));
+    const same = sizes.every(p => Math.abs(p.point - sizes[0].point) < 1e-6 && Math.abs(p.lo - sizes[0].lo) < 1e-6 && Math.abs(p.hi - sizes[0].hi) < 1e-6);
+    $('sensDeal').textContent = (same
+      ? 'Deal size changes nothing up here: a $5B, $20B, $60B or $100B raise gives the identical answer. '
+      : 'Deal size moves the answer only a little between $5B and $100B. ')
+      + `Tree models don't extrapolate past what they have seen. The largest IPO with a filed range in its data is ${M.train_max_ranged_symbol} at ${bn(M.train_max_ranged_deal)}; the largest listing of any kind is Coinbase's ${bn(M.train_max_deal)} direct listing, which had no range. ANT is beyond both.`;
+    $('sensCov').textContent = 'The band is a nominal 80%. In the backtest, the bands the gate published caught 68% of first closes (see the track record), so read it as tighter than the evidence supports.';
+  }
 
   $('hdDeal').textContent = bn(dealAt(TOP)); $('hdRange').textContent = `$${base.low}–$${base.high}`;
   if (filed) $('hdRangeNote').textContent = 'These use the range filed on EDGAR,';
