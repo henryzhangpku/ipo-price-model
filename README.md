@@ -197,10 +197,16 @@ biases the sample toward survivors, and the count dropped is reported. No
 underwriter identity, no sector, no S-1 text: each would be a new declared
 feature with its own preregistration.
 
-For ANT specifically: the largest IPO in the training data is Rivian at $12B,
-and a $60–100B raise is five to eight times that. Gradient-boosted trees do not
-extrapolate, so the band describes how the very largest past listings behaved,
-not a forecast for a deal the US market has never priced. Until the cover states
+For ANT specifically: the largest IPO with a filed range in the data is Rivian
+at $12B, and a $60–100B raise is five to eight times that (the largest listing
+of any kind is Coinbase's $29B direct listing, with no range: two to three and
+a half times). Gradient-boosted trees do not extrapolate, so above about $5B
+the deal size changes nothing, and the band describes how the very largest past
+listings behaved, not a forecast for a deal the US market has never priced.
+Two public inputs still move the frozen model's answer: the filed range (its
+width as well as where the offer lands) and the 90-day IPO market. The market
+read rests on a dozen or so listings, and the trees respond to it in steps, so
+one new listing can move the band; every such move is in the record. Until the cover states
 a share count, the deal size is a press estimate, labelled as one. The live
 regime adds listings from the Nasdaq calendar, while the frozen data came from
 Finnhub; both go through the same cohort rules.

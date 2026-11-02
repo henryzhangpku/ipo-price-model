@@ -12,7 +12,7 @@
 <meta property="og:image" content="https://henryzhangpku.github.io/ipo-price-model/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
-<meta property="og:image:alt" content="Pricing Anthropic (ANT) the night before it trades: model first day +20.8% at the top of the range, 80% band +5.8% to +38.8%">
+<meta property="og:image:alt" content="Pricing Anthropic (ANT) the night before it trades: a frozen open-source model's first-day band for ANT, tracked live from its S-1 to its first close">
 <meta property="og:site_name" content="IPO Price Model">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://henryzhangpku.github.io/ipo-price-model/og.png">
@@ -239,7 +239,7 @@ body.nomodel .pending{display:block;padding:22px}
       <div class="stats">
         <div><div class="k">Gate at top of range</div><div class="v" id="stGate"></div></div>
         <div><div class="k">IPO market, last 90 days</div><div class="v" id="stRegime"></div></div>
-        <div><div class="k">Largest IPO it trained on</div><div class="v" id="stMax"></div></div>
+        <div><div class="k">Largest ranged IPO in its data</div><div class="v" id="stMax"></div></div>
         <div><div class="k">Browser vs Python</div><div class="v" id="stCheck"></div></div>
       </div>
     </div>
@@ -275,7 +275,9 @@ body.nomodel .pending{display:block;padding:22px}
     <h2 class="sh">What moves the number, and what doesn't</h2>
     <p class="sd" id="sensLead"></p>
     <div class="card tablewrap">
-      <table id="sens"><thead><tr><th>If the filed range is</th><th>Median at the top</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
+      <table id="sens"><thead><tr><th>Priced at the top of a range of</th><th>First-day median</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
+      <table id="sensReg" style="margin-top:16px"><thead><tr><th>If recent IPOs' median first day were</th><th>First-day median</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
+      <p class="tnote" id="sensRegNote"></p>
       <p class="tnote" id="sensDeal"></p>
       <p class="tnote" id="sensCov"></p>
     </div>
@@ -471,9 +473,10 @@ body.nomodel .pending{display:block;padding:22px}
     $('heroPill').innerHTML = `80% band <small>${pct(ph.lo/TOP-1)} to ${pct(ph.hi/TOP-1)}</small>`;
     $('heroBand').textContent = filed
       ? `Median first close against the offer if ANT prices at the top of its filed $${base.low}–$${base.high} range, for a ${bn(dealAt(TOP))} raise. On pricing night the actual offer replaces the scenario.`
-      : `Median first close against the offer, for a ${bn(base.deal)} raise priced at the top of a placeholder $${base.low}–$${base.high} range. Today the S-1 has no range, so the gate withholds; this is the number it gives the moment one is filed.`;
+      : `A scenario, not the call: the median first close for a ${bn(base.deal)} raise priced at the top of a placeholder $${base.low}–$${base.high} range. The S-1 has no range yet, so the gate withholds the real call until one is filed.`;
   }
   if (!result) $('heroBand').textContent += ' The 80% is nominal: in the backtest, published bands caught 68%.';
+  if (LR) $('heroBand').textContent += ` As of record #${LR.seq}, ${LR.as_of}.`;
   if (LR){
     const reg = LR.filing.registration || {};
     const bits = [`${reg.form || 'S-1'} filed ${reg.date || '26 Oct 2026'}`];
@@ -523,15 +526,24 @@ body.nomodel .pending{display:block;padding:22px}
       const tag = lo === base.low ? (filed ? ' (filed)' : ' (placeholder)') : (lo > base.low ? ' (narrower)' : ' (wider)');
       tb.insertAdjacentHTML('beforeend', `<tr${lo === base.low ? ' class="hl"' : ''}><td>$${lo}–$${TOP}${tag}</td><td>${pct(p.point/TOP-1)}</td><td>${pct(p.lo/TOP-1)} to ${pct(p.hi/TOP-1)}</td><td>${pill(p)}</td></tr>`);
     });
-    $('sensLead').textContent = filed
-      ? 'The range on EDGAR is an input, not just a reference point: the same top-of-range offer gives a different answer for a narrower or wider range. The filed range is highlighted.'
-      : `The headline uses a placeholder $${base.low}–$${base.high} range, and its width matters: the same $${TOP} offer at the top of a narrower or wider range gives a different answer. The filed range replaces the placeholder the day it appears on EDGAR.`;
+    $('sensLead').textContent = (filed
+      ? 'The model is frozen, but two public inputs still move its answer. The filed range is one: the same top-of-range offer gives a different answer for a narrower or wider range. '
+      : `The model is frozen, but two public inputs still move its answer. One is the range: the headline uses a placeholder $${base.low}–$${base.high}, and the same $${TOP} offer at the top of a narrower or wider range gives a different answer. The filed range replaces the placeholder the day it appears on EDGAR. `)
+      + 'The other is the IPO market of the last 90 days, which the job refreshes every weekday.';
+    const R0 = M.regime, tr = document.querySelector('#sensReg tbody');
+    [-0.02, 0, 0.02].forEach(dm => {
+      M.regime = {...R0, regime_first_day_median: R0.regime_first_day_median + dm};
+      const p = price({...base, deal: dealAt(TOP), offer: TOP});
+      tr.insertAdjacentHTML('beforeend', `<tr${dm === 0 ? ' class="hl"' : ''}><td>${pct(M.regime.regime_first_day_median)}${dm === 0 ? ' (today)' : ''}</td><td>${pct(p.point/TOP-1)}</td><td>${pct(p.lo/TOP-1)} to ${pct(p.hi/TOP-1)}</td><td>${pill(p)}</td></tr>`);
+    });
+    M.regime = R0;
+    $('sensRegNote').textContent = `Today's market read rests on ${R0.regime_n} listings, so one new deal can shift it, and the trees respond to it in steps, not smoothly: a weaker market does not always mean a lower number. The daily record keeps every change, so you can see each one in the tracker table above.`;
     const sizes = [5e9, 20e9, 60e9, 100e9].map(d => price({...base, deal: d, offer: TOP}));
     const same = sizes.every(p => Math.abs(p.point - sizes[0].point) < 1e-6 && Math.abs(p.lo - sizes[0].lo) < 1e-6 && Math.abs(p.hi - sizes[0].hi) < 1e-6);
     $('sensDeal').textContent = (same
       ? 'Deal size changes nothing up here: a $5B, $20B, $60B or $100B raise gives the identical answer. '
       : 'Deal size moves the answer only a little between $5B and $100B. ')
-      + `Tree models don't extrapolate past what they have seen. The largest IPO with a filed range in its data is ${M.train_max_ranged_symbol} at ${bn(M.train_max_ranged_deal)}; the largest listing of any kind is Coinbase's ${bn(M.train_max_deal)} direct listing, which had no range. ANT is beyond both.`;
+      + `Tree models don't extrapolate past what they have seen. The largest IPO with a filed range in its data is ${M.train_max_ranged_symbol} at ${bn(M.train_max_ranged_deal)}; the largest listing of any kind is Coinbase's ${bn(M.train_max_deal)} direct listing, which had no range. A ${bn(dealAt(TOP))} ANT raise is about ${Math.round(dealAt(TOP)/M.train_max_ranged_deal)}× the first and ${(dealAt(TOP)/M.train_max_deal).toFixed(1)}× the second.`;
     $('sensCov').textContent = 'The band is a nominal 80%. In the backtest, the bands the gate published caught 68% of first closes (see the track record), so read it as tighter than the evidence supports.';
   }
 
