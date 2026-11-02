@@ -27,8 +27,6 @@ jobs:
   track:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      SEC_USER_AGENT: "ipo-price-model research henryzhangpku@users.noreply.github.com"
     steps:
       - uses: actions/checkout@v4
 

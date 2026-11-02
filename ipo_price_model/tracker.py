@@ -352,7 +352,8 @@ def _git_sha() -> str | None:
         return None
 
 
-def read_tape(path: Path = TAPE) -> list[dict]:
+def read_tape(path: Path | None = None) -> list[dict]:
+    path = path or TAPE
     if not path.exists():
         return []
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
@@ -361,8 +362,9 @@ def read_tape(path: Path = TAPE) -> list[dict]:
 _VOLATILE = ("run_utc", "code_commit", "seq")
 
 
-def append_if_changed(rec: dict, path: Path = TAPE) -> bool:
+def append_if_changed(rec: dict, path: Path | None = None) -> bool:
     """Append ``rec`` unless it says what the last record already says. Never rewrites a line."""
+    path = path or TAPE
     tape = read_tape(path)
     if tape:
         last = {k: v for k, v in tape[-1].items() if k not in _VOLATILE}
@@ -399,12 +401,15 @@ def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = Fa
     today = (today or pd.Timestamp(now.date())).normalize()
     first_trade = pd.Timestamp(deal["expected_first_trade"])
 
+    tape = read_tape()
     filing = {"registration": None, "prospectus": None, "error": None}
     if not offline:
         try:
             filing = {**edgar_status(deal["cik"]), "error": None}
         except Exception as e:
-            filing["error"] = f"{type(e).__name__}: {e}"[:300]
+            # an outage must never move the record backwards: keep the last filing read, and say so
+            last = next((r["filing"] for r in reversed(tape) if (r.get("filing") or {}).get("registration")), None)
+            filing = {**(last or filing), "error": f"{type(e).__name__}: {e}"[:300], "carried_forward": bool(last)}
     pros = filing.get("prospectus") or {}
     if pros.get("date"):                       # the final prospectus is filed the morning the shares first trade
         first_trade = pd.Timestamp(pros["date"])
@@ -421,7 +426,6 @@ def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = Fa
 
     numbers = make_call(model, deal, filing, regime)
     result = None
-    tape = read_tape()
     published_call = next((r["call"] for r in reversed(tape) if r.get("call") and r["as_of"] < str(first_trade.date())), None)
     if published_call and today >= first_trade and not offline:
         fc = first_close(deal["symbol"], first_trade)
@@ -443,7 +447,8 @@ def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = Fa
     return rec, changed
 
 
-def write_live(deal: dict, path: Path = LIVE_JSON) -> None:
+def write_live(deal: dict, path: Path | None = None) -> None:
+    path = path or LIVE_JSON
     tape = read_tape()
     hist = [{"seq": r["seq"], "as_of": r["as_of"], "run_utc": r["run_utc"], "stage": r["stage"], "headline": r["headline"],
              "range": r["range"], "range_source": r["range_source"], "regime_n": r["regime"]["n"],

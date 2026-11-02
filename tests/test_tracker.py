@@ -106,3 +106,20 @@ def test_stages_advance_with_the_filings():
     assert T.stage_of({"registration": {"low": 30.0}, "prospectus": {"offer": 33.0}}, ft, today, None) == "priced"
     assert T.stage_of({"registration": {"low": 30.0}, "prospectus": {"offer": 33.0}}, ft, ft, None) == "trading"
     assert T.stage_of({}, ft, ft, {"inside_band": True}) == "scored"
+
+
+def test_an_edgar_outage_carries_the_last_filing_forward(tmp_path, monkeypatch):
+    tape = tmp_path / "tape.jsonl"
+    reg = {"form": "S-1/A", "date": "2026-11-09", "low": 30.0, "high": 33.0, "shares": None, "url": "u", "accession": "a"}
+    tape.write_text(json.dumps({"seq": 1, "as_of": "2026-11-09", "filing": {"registration": reg, "prospectus": None}}) + "\n")
+    monkeypatch.setattr(T, "TAPE", tape)
+    monkeypatch.setattr(T, "write_live", lambda deal: None)
+
+    def down(cik):
+        raise ConnectionError("EDGAR unreachable")
+    monkeypatch.setattr(T, "edgar_status", down)
+    monkeypatch.setattr(T, "refresh_listings", lambda today, decision: (json.loads(T.LISTINGS_JSON.read_text())["listings"],
+                                                                     {"source": "test", "ok": True, "added": []}))
+    rec, _ = T.track(T.TRACKER_DIR / "ant.json", today=pd.Timestamp("2026-11-10"))
+    assert rec["stage"] == "range_filed" and rec["range"] == [30.0, 33.0]
+    assert rec["filing"]["carried_forward"] and "EDGAR unreachable" in rec["filing"]["error"]
