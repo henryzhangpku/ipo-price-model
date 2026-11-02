@@ -4,177 +4,287 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ANT, the night before</title>
-<meta name="description" content="ipo-price-model, live in the browser: a calibrated first-close interval for Anthropic's Nasdaq listing, and the gate that withholds it when the evidence is thin.">
+<meta name="description" content="A calibrated 80% band for Anthropic's (ANT) first close, run live in your browser, from a model that also says when it won't print a number.">
 <meta property="og:title" content="Pricing Anthropic (ANT) the night before it trades">
 <meta property="og:description" content="A calibrated 80% band for ANT's first close, run live in your browser, from a model that also says when it won't print a number.">
 <meta property="og:url" content="https://henryzhangpku.github.io/ipo-price-model/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 :root{
-  --bg:#f7f6f2; --panel:#ffffff; --ink:#1b1b1a; --muted:#6b6a65; --line:#e3e1da;
-  --accent:#c2552d; --accent-soft:#f3dfd5; --band:#2f6f8f; --band-soft:#d6e6ee;
-  --ref:#8a8780; --ok:#2e7d4f; --ok-soft:#dcefe3; --warn:#a4561a; --warn-soft:#f6e4d2;
-  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --bg:#f8fafc; --panel:#ffffff; --ink:#072b46; --body:#1e3a4c; --muted:#536f7d; --faint:#8aa0ad;
+  --line:#e3e9ef; --line-strong:#cfd9e2; --tint:#f1f5f9;
+  --accent:#2e8bd0; --accent-soft:#e3f0fa; --accent-ink:#1d6aa5;
+  --band:#2e8bd0; --band-soft:rgba(46,139,208,.14); --ref:#a3b3bf;
+  --pos:#1d7a4c; --pos-soft:#e2f4ea; --warn:#a1581a; --warn-soft:#fbefe1;
+  --btn:#0f3b5c; --btn-ink:#ffffff; --shadow:0 1px 2px rgba(7,43,70,.04),0 8px 24px rgba(7,43,70,.06);
+  --serif:'Newsreader',Georgia,'Times New Roman',serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#151513; --panel:#1e1e1c; --ink:#ecebe6; --muted:#9b9991; --line:#33322e;
-    --accent:#e07a50; --accent-soft:#3b2519; --band:#6fb0cf; --band-soft:#1d3440;
-    --ref:#8d8b84; --ok:#6cc08d; --ok-soft:#1b3326; --warn:#e3a067; --warn-soft:#3a2716;
+    --bg:#08141f; --panel:#0e1f2e; --ink:#e9f1f7; --body:#c9d7e1; --muted:#8ea6b5; --faint:#66808f;
+    --line:#1c3244; --line-strong:#27435a; --tint:#0b1a27;
+    --accent:#5cb0ec; --accent-soft:#12324a; --accent-ink:#8ccaf5;
+    --band:#5cb0ec; --band-soft:rgba(92,176,236,.18); --ref:#5d7686;
+    --pos:#62c995; --pos-soft:#123526; --warn:#eaa264; --warn-soft:#3a2615;
+    --btn:#e9f1f7; --btn-ink:#08141f; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#151513; --panel:#1e1e1c; --ink:#ecebe6; --muted:#9b9991; --line:#33322e;
-  --accent:#e07a50; --accent-soft:#3b2519; --band:#6fb0cf; --band-soft:#1d3440;
-  --ref:#8d8b84; --ok:#6cc08d; --ok-soft:#1b3326; --warn:#e3a067; --warn-soft:#3a2716;
+  --bg:#08141f; --panel:#0e1f2e; --ink:#e9f1f7; --body:#c9d7e1; --muted:#8ea6b5; --faint:#66808f;
+  --line:#1c3244; --line-strong:#27435a; --tint:#0b1a27;
+  --accent:#5cb0ec; --accent-soft:#12324a; --accent-ink:#8ccaf5;
+  --band:#5cb0ec; --band-soft:rgba(92,176,236,.18); --ref:#5d7686;
+  --pos:#62c995; --pos-soft:#123526; --warn:#eaa264; --warn-soft:#3a2615;
+  --btn:#e9f1f7; --btn-ink:#08141f; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-main{max-width:980px;margin:0 auto;padding:40px 16px 80px}
-h1{font-size:clamp(28px,5vw,42px);line-height:1.1;margin:6px 0 10px;letter-spacing:-.02em}
-h2{font-size:19px;margin:44px 0 12px;letter-spacing:-.01em}
-.kicker{font:500 12px var(--mono);color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
-.lede{color:var(--muted);max-width:720px;font-size:16px}
-a{color:var(--band)}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
-.status{display:flex;gap:16px;align-items:flex-start;margin-top:24px}
-.pill{display:inline-block;font:500 12px var(--mono);padding:3px 9px;border-radius:99px;white-space:nowrap}
-.pill.withheld{background:var(--warn-soft);color:var(--warn)}
-.pill.published{background:var(--ok-soft);color:var(--ok)}
-.grid{display:grid;grid-template-columns:300px 1fr;gap:20px;margin-top:16px}
-@media (max-width:760px){.grid{grid-template-columns:1fr}}
-label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}
-input,select{width:100%;font:15px var(--mono);padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
-.presets button{font:500 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 10px;border-radius:99px;cursor:pointer}
-.presets button:hover{border-color:var(--accent);color:var(--accent)}
-.toggle{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px}
-.toggle input{width:auto}
-.big{display:flex;flex-wrap:wrap;gap:22px;margin:4px 0 14px}
-.big .k{font-size:12px;color:var(--muted)}
-.big .v{font:600 26px var(--mono);letter-spacing:-.02em}
-.big .v small{font-size:13px;color:var(--muted);font-weight:400}
-.verdict{padding:12px 14px;border-radius:8px;font-size:14px;margin-bottom:14px}
-.verdict.withheld{background:var(--warn-soft);color:var(--warn)}
-.verdict.published{background:var(--ok-soft);color:var(--ok)}
-.note{font-size:13px;color:var(--muted)}
-.flag{border-left:3px solid var(--accent);padding:8px 12px;background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:13px;margin-top:12px}
-svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
-th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
-th{font-weight:500;color:var(--muted);font-size:12px}
-td{font-family:var(--mono)}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--body);font:16px/1.6 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;background-position:center -1px;background-attachment:local}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,transparent 0,var(--bg) 520px);pointer-events:none;z-index:-1}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font:13px var(--mono);background:var(--tint);border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+
+nav.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.mark{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;color:var(--ink)}
+.mark svg{width:22px;height:22px}
+nav.top .links{display:flex;gap:22px;font-size:14px}
+nav.top .links a{color:var(--muted)}
+@media (max-width:640px){nav.top .links .opt{display:none}}
+
+.hero{text-align:center;padding:48px 0 36px}
+.hero h1{font:400 clamp(36px,6.4vw,60px)/1.06 var(--serif);color:var(--ink);letter-spacing:-.02em;margin:0 auto 18px;max-width:820px;text-wrap:balance}
+.hero p{font-size:clamp(16px,2.2vw,19px);color:var(--muted);max-width:640px;margin:0 auto 28px}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 26px;border-radius:8px;font-weight:600;font-size:15px;background:var(--btn);color:var(--btn-ink);border:1px solid var(--btn)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+.btn:hover{text-decoration:none;opacity:.92}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.window{overflow:hidden}
+.window .chrome{display:flex;gap:6px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--tint)}
+.window .chrome i{width:8px;height:8px;border-radius:50%;background:var(--line-strong);display:block}
+.window .inner{padding:24px 28px 8px}
+@media (max-width:640px){.window .inner{padding:18px 16px 4px}}
+.co{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.co .logo{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;font:500 15px var(--serif);color:var(--ink);background:var(--tint)}
+.co .name{font-weight:600;color:var(--ink);font-size:17px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.co .sub{font-size:13px;color:var(--muted)}
+.tag{font-size:11px;font-weight:500;border:1px solid var(--line-strong);border-radius:5px;padding:1px 6px;color:var(--muted)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.bigrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:4px 0 6px}
+.big{font:400 clamp(52px,10vw,76px)/1 var(--serif);color:var(--ink);letter-spacing:-.03em}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:7px;white-space:nowrap}
+.pill.pos{background:var(--pos-soft);color:var(--pos)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill small{font-weight:500;opacity:.8}
+.cap{font-size:13px;color:var(--muted);margin:0}
+.chartlab{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:22px 0 4px}
+svg text{font:11px Inter,sans-serif;fill:var(--faint)}
+#sweep text{font-size:14px}
+#bandsvg text{font-size:12px}
+#sweep text.hl{font-size:16px;font-weight:600;fill:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin:14px -28px 0}
+.stats>div{padding:14px 18px;border-right:1px solid var(--line)}
+.stats>div:last-child{border-right:0}
+.stats .k{font-size:12px;color:var(--muted)}
+.stats .v{font:500 17px Inter,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+@media (max-width:760px){.stats{grid-template-columns:1fr 1fr;margin:14px -16px 0}.stats>div:nth-child(2){border-right:0}.stats>div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+section{padding:64px 0 0}
+.sh{font:400 clamp(28px,4vw,38px)/1.15 var(--serif);color:var(--ink);letter-spacing:-.015em;margin:8px 0 10px}
+.sd{color:var(--muted);max-width:680px;margin:0 0 22px}
+
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:500;color:var(--muted);font-size:12px;letter-spacing:.04em;text-transform:uppercase;background:var(--tint)}
+td{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:var(--accent-soft)}
 .tablewrap{overflow-x:auto}
-.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media (max-width:760px){.cols{grid-template-columns:1fr}}
-.cols .panel h3{margin:0 0 6px;font-size:14px}
-.cols .panel p{margin:0;font-size:13px;color:var(--muted)}
-footer{margin-top:56px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.tnote{font-size:13px;color:var(--muted);padding:12px 14px;margin:0;border-top:1px solid var(--line)}
+
+.calc{display:grid;grid-template-columns:320px 1fr;gap:0;overflow:hidden}
+@media (max-width:800px){.calc{grid-template-columns:1fr}}
+.calc .in{padding:22px;border-right:1px solid var(--line);background:var(--tint)}
+@media (max-width:800px){.calc .in{border-right:0;border-bottom:1px solid var(--line)}}
+.calc .out{padding:22px 26px}
+label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin:14px 0 5px}
+input,select{width:100%;font:15px Inter,sans-serif;font-variant-numeric:tabular-nums;padding:10px 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--panel);color:var(--ink)}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled{opacity:.45}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:9px}
+.seg button{flex:1 1 auto;font:500 12px Inter,sans-serif;border:0;background:transparent;color:var(--muted);padding:7px 8px;border-radius:6px;cursor:pointer}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:var(--accent-soft);color:var(--accent-ink)}
+.toggle{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--ink)}
+.toggle input{width:auto;margin:0}
+.toggle label{margin:0;color:var(--ink);font-size:13px}
+.kv{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 6px}
+@media (max-width:560px){.kv{grid-template-columns:1fr 1fr}}
+.kv .k{font-size:12px;color:var(--muted)}
+.kv .v{font:400 24px/1.2 var(--serif);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.verdict{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:9px;font-size:14px}
+.verdict.published{background:var(--pos-soft);color:var(--pos)}
+.verdict.withheld{background:var(--warn-soft);color:var(--warn)}
+.flag{border-left:3px solid var(--warn);padding:10px 14px;background:var(--warn-soft);color:var(--body);border-radius:0 8px 8px 0;font-size:13px;margin-top:14px}
+.note{font-size:13px;color:var(--muted)}
+
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:800px){.cols{grid-template-columns:1fr}}
+.cols .card{padding:22px}
+.cols .num{font:400 15px var(--serif);color:var(--accent-ink)}
+.cols h3{font:500 21px/1.25 var(--serif);color:var(--ink);margin:4px 0 8px}
+.cols p{margin:0;font-size:14px;color:var(--muted)}
+
+.verdictbox{padding:20px 24px;border-left:3px solid var(--accent);font-size:15px}
+.verdictbox p{margin:0 0 10px}
+.verdictbox p:last-child{margin:0}
+
+footer{margin:72px 0 0;padding:28px 0 48px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer p{margin:6px 0}
 .check{font:12px var(--mono);color:var(--muted)}
 .check.bad{color:var(--warn)}
-.hero{margin-top:24px;padding:24px}
-.hero .k{font-size:14px;color:var(--muted)}
-.hero .hv{font:600 clamp(40px,9vw,64px)/1.1 var(--mono);color:var(--accent);letter-spacing:-.03em;margin:6px 0}
+
 body.nomodel .needs-model{display:none}
 .pending{display:none}
-body.nomodel .pending{display:block}
+body.nomodel .pending{display:block;padding:22px}
 </style>
 </head>
 <body>
-<main>
-  <div class="kicker">ipo-price-model · live demo</div>
-  <h1>Pricing Anthropic (ANT) the night before it trades</h1>
-  <p class="lede">Anthropic filed its S-1 on 26 October 2026 for a Nasdaq Global Select listing under <b>ANT</b>, reported for the week of 16 November. This page runs the fitted model from <a href="https://github.com/henryzhangpku/ipo-price-model">ipo-price-model</a> in your browser, tree by tree: an 80% conformal interval for the first close, from T-1 facts only, and a gate that withholds the number when the evidence can't support one.</p>
+<div class="wrap">
+  <nav class="top">
+    <div class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 L10 6 L13 12" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M12 20 L17 10 L21 20" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>IPO Price Model</div>
+    <div class="links"><a href="#calc">Calculator</a><a class="opt" href="#method">Method</a><a class="opt" href="#record">Track record</a><a href="https://github.com/henryzhangpku/ipo-price-model">GitHub</a></div>
+  </nav>
 
-  <div class="needs-model">
-  <div class="panel hero">
-    <div class="k">If ANT prices at the top of its range, the model's first day</div>
-    <div class="hv" id="heroMove"></div>
-    <div class="k" id="heroBand"></div>
-  </div>
-  <h2>By where ANT prices against its range</h2>
-  <div class="panel tablewrap"><table id="headline"><thead><tr><th>if ANT prices…</th><th></th><th>first-day median</th><th>80% band</th><th>gate</th></tr></thead><tbody></tbody></table>
-  <p class="note">A <span id="hdDeal"></span> raise on Nasdaq Global Select, decision date 16 November. The S-1 doesn't state a range yet, so these use a placeholder range of <span id="hdRange"></span>; answers are shown as moves from the offer. Enter the real range below once the S-1/A is filed.</p></div>
-  </div>
+  <header class="hero">
+    <h1>Pricing Anthropic the night before it trades</h1>
+    <p>A calibrated 80% band for ANT's first close, from only what's public the night before it lists. It runs live in your browser, and it says plainly when the evidence can't support a number.</p>
+    <div class="btns"><a class="btn" href="#calc">Try your own range</a><a class="btn ghost" href="#record">See the track record</a></div>
+  </header>
 
-  <div class="panel pending" style="margin-top:16px"><b>The scenario calculator is being re-fitted.</b> The model is re-fitting on listings through 14 Nov 2026 so the regime is current for 16 November. When it lands, this space becomes the live calculator: type the S-1/A range, the offer and the deal size, and get the 80% band and the gate's verdict.</div>
-  <div class="needs-model">
-  <h2>Scenario</h2>
-  <div class="grid">
-    <div class="panel">
-      <div class="presets">
-        <button data-p="top">Prices at top</button>
-        <button data-p="above">Above range</button>
-        <button data-p="mid">Mid-range</button>
-        <button data-p="below">Below range</button>
-        <button data-p="norange">No range (today)</button>
+  <div class="card window needs-model">
+    <div class="chrome"><i></i><i></i><i></i></div>
+    <div class="inner">
+      <div class="co">
+        <div class="logo">A</div>
+        <div>
+          <div class="name">Anthropic <span class="tag">ANT</span><span class="tag">Nasdaq GS</span></div>
+          <div class="sub">S-1 filed 26 Oct 2026 · reported listing week of 16 Nov · range not yet filed</div>
+        </div>
       </div>
-      <div class="toggle"><input type="checkbox" id="hasRange" checked><label for="hasRange" style="margin:0;color:var(--ink)">Filed range is known</label></div>
-      <div class="row2">
-        <div><label for="low">Range low ($)</label><input id="low" type="number" step="0.5" value="40"></div>
-        <div><label for="high">Range high ($)</label><input id="high" type="number" step="0.5" value="44"></div>
+      <div class="eyebrow">Model first-day move · if it prices at the top of its range</div>
+      <div class="bigrow"><span class="big" id="heroMove">—</span><span class="pill pos" id="heroPill"></span></div>
+      <p class="cap" id="heroBand"></p>
+      <div class="chartlab"><span>First-day move vs where the offer lands · 80% band and median</span><span id="heroDeal"></span></div>
+      <svg id="sweep" viewBox="0 0 900 256" width="100%" role="img" aria-label="The model's first-day move and 80% band as ANT's offer moves across a placeholder filed range"></svg>
+      <div class="stats">
+        <div><div class="k">Gate at top of range</div><div class="v" id="stGate"></div></div>
+        <div><div class="k">IPO market, last 90 days</div><div class="v" id="stRegime"></div></div>
+        <div><div class="k">Largest deal it has seen</div><div class="v" id="stMax"></div></div>
+        <div><div class="k">Browser vs Python</div><div class="v" id="stCheck"></div></div>
       </div>
-      <label for="offer">Offer price ($)</label><input id="offer" type="number" step="0.5" value="44">
-      <label for="deal">Deal size ($ billion)</label><input id="deal" type="number" step="1" value="60">
-      <label for="exch">Exchange</label>
-      <select id="exch"><option>NASDAQ Global Select</option><option>NYSE</option><option>NASDAQ Capital</option><option value="OTC">Other / not major</option></select>
-      <p class="note" style="margin-top:14px">Decision date <span id="ddate" class="check"></span>, regime over the prior 90 days: <span id="regime" class="check"></span></p>
-    </div>
-
-    <div class="panel">
-      <div id="verdict" class="verdict"></div>
-      <div class="big">
-        <div><div class="k">first close, model median</div><div class="v" id="point"></div></div>
-        <div><div class="k">80% band</div><div class="v" id="band"></div></div>
-        <div><div class="k">first-day move</div><div class="v" id="move"></div></div>
-        <div><div class="k">width / offer</div><div class="v" id="width"></div></div>
-      </div>
-      <svg id="bandsvg" viewBox="0 0 600 150" width="100%" role="img" aria-label="Filed range, offer, model band and reference band on one price axis"></svg>
-      <div id="ood"></div>
     </div>
   </div>
+  <div class="card pending">The model is being re-fitted. The live ANT numbers appear here when it lands.</div>
 
-  <h2>Where the offer lands against the range</h2>
-  <p class="note" style="margin-top:-6px">Same deal, offer swept from 15% below the range low to 20% above the high. The shaded band is the model's 80% interval; the line is its median; the dashed line is the offer. Points where the gate would withhold are drawn hollow.</p>
-  <div class="panel"><svg id="sweep" viewBox="0 0 900 300" width="100%" role="img" aria-label="Model band as the offer price moves across the filed range"></svg></div>
+  <section class="needs-model">
+    <div class="eyebrow">Scenarios</div>
+    <h2 class="sh">By where ANT prices against its range</h2>
+    <p class="sd">A deal that prices above its range has met more demand than its bankers expected, and that's the single most informative fact the night before. The S-1 leaves the range blank, so these use a placeholder range of <span id="hdRange"></span>. Answers are moves from the offer.</p>
+    <div class="card tablewrap">
+      <table id="headline"><thead><tr><th>If ANT prices</th><th>First-day median</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
+      <p class="tnote">A <span id="hdDeal"></span> raise on Nasdaq Global Select, decision date 16 November 2026. The offer level is itself a model input, so a different share price shifts these a little.</p>
+    </div>
+  </section>
 
-  <h2>The nearest evidence: the largest listings the model has seen</h2>
-  <p class="note" style="margin-top:-6px" id="largestNote"></p>
-  <div class="panel tablewrap"><table id="largest"><thead><tr><th>ticker</th><th>name</th><th>listed</th><th>deal</th><th>offer</th><th>first close</th><th>first day</th></tr></thead><tbody></tbody></table></div>
+  <section id="calc" class="needs-model">
+    <div class="eyebrow">Calculator</div>
+    <h2 class="sh">Try your own range</h2>
+    <p class="sd">When the S-1/A sets the range, or on the night it prices, put the real numbers in. Everything runs in your browser on the same trees the Python model uses.</p>
+    <div class="card calc">
+      <div class="in">
+        <div class="seg" id="presets">
+          <button data-p="top" class="on">Top</button><button data-p="above">Above</button><button data-p="mid">Mid</button><button data-p="below">Below</button><button data-p="norange">No range</button>
+        </div>
+        <div class="toggle"><input type="checkbox" id="hasRange" checked><label for="hasRange">Filed range is known</label></div>
+        <div class="row2">
+          <div><label for="low">Range low ($)</label><input id="low" type="number" step="0.5" value="40"></div>
+          <div><label for="high">Range high ($)</label><input id="high" type="number" step="0.5" value="44"></div>
+        </div>
+        <label for="offer">Offer price ($)</label><input id="offer" type="number" step="0.5" value="44">
+        <label for="deal">Deal size ($ billion)</label><input id="deal" type="number" step="1" value="60">
+        <label for="exch">Exchange</label>
+        <select id="exch"><option>NASDAQ Global Select</option><option>NYSE</option><option>NASDAQ Capital</option><option value="OTC">Other / not major</option></select>
+        <p class="note" style="margin:14px 0 0">Decision date <span id="ddate"></span>. IPO regime: <span id="regime"></span>.</p>
+      </div>
+      <div class="out">
+        <div id="verdict" class="verdict"></div>
+        <div class="kv">
+          <div><div class="k">First close, median</div><div class="v" id="point"></div></div>
+          <div><div class="k">80% band</div><div class="v" id="band"></div></div>
+          <div><div class="k">First-day move</div><div class="v" id="move"></div></div>
+          <div><div class="k">Band width / offer</div><div class="v" id="width"></div></div>
+        </div>
+        <svg id="bandsvg" viewBox="0 0 600 150" width="100%" role="img" aria-label="Filed range, offer, model band and reference band on one price axis"></svg>
+        <div id="ood"></div>
+      </div>
+    </div>
+  </section>
 
-  </div>
+  <section class="needs-model">
+    <div class="eyebrow">Evidence</div>
+    <h2 class="sh">The biggest listings the model has seen</h2>
+    <p class="sd" id="largestNote"></p>
+    <div class="card tablewrap"><table id="largest"><thead><tr><th>Ticker</th><th>Listed</th><th>Deal</th><th>Offer</th><th>First close</th><th>First day</th></tr></thead><tbody></tbody></table></div>
+  </section>
 
-  <h2>How it works</h2>
-  <div class="cols">
-    <div class="panel"><h3>T-1 facts only</h3><p>Offer, filed range (read from the last S-1/A on EDGAR before the first trade), deal size, venue, and a 90-day regime of listings that closed strictly before. Leakage assertions raise on anything else.</p></div>
-    <div class="panel"><h3>Conformal band</h3><p>Gradient-boosted 10/50/90 quantiles of log(first close / offer), widened on a later, disjoint window so 80% coverage holds in finite samples (CQR). Trained to 2023, calibrated 2024 on.</p></div>
-    <div class="panel"><h3>A gate that says no</h3><p><code>no_range</code> → <code>thin_regime</code> (&lt;5 recent listings) → <code>too_wide</code> (band &gt; 60% of offer). The gate never narrows a band; it decides whether to show one.</p></div>
-  </div>
+  <section id="method">
+    <div class="eyebrow">Method</div>
+    <h2 class="sh">Three rules, fixed before any result</h2>
+    <div class="cols">
+      <div class="card"><div class="num">01</div><h3>Only what's known the night before</h3><p>The offer, the filed range (read from the last S-1/A on EDGAR before the first trade), deal size, venue, and a 90-day read of how recent IPOs traded. A leakage check raises on anything else.</p></div>
+      <div class="card"><div class="num">02</div><h3>A band with a coverage guarantee</h3><p>Gradient-boosted 10th, 50th and 90th percentile models of the first-day move, then widened on a later, separate window (conformal calibration) so the 80% band holds on data the model hasn't seen.</p></div>
+      <div class="card"><div class="num">03</div><h3>A gate that says no</h3><p>No filed range, fewer than five recent IPOs, or a band wider than 60% of the offer: any one of these and the number is withheld. The gate never narrows a band; it only decides whether to show one.</p></div>
+    </div>
+  </section>
 
-  <h2>Track record: this fit, test window 2024 to Oct 2026</h2>
-  <div class="panel tablewrap"><table>
-    <thead><tr><th>scored set</th><th></th><th>listings</th><th>coverage (target 0.80)</th><th>mean width, × offer</th></tr></thead>
-    <tbody>
-      <tr><td>model, every listing</td><td></td><td>428</td><td>0.836</td><td>1.37</td></tr>
-      <tr><td>reference, every listing</td><td></td><td>428</td><td>0.811</td><td>0.67</td></tr>
-      <tr><td><b>model, the 103 the gate publishes</b></td><td></td><td>103</td><td><b>0.680</b></td><td>0.50</td></tr>
-      <tr><td>reference, the same 103</td><td></td><td>103</td><td>0.777</td><td>0.67</td></tr>
-      <tr><td>model, deals ≥ $500M</td><td></td><td>61</td><td>0.754</td><td>0.55</td></tr>
-    </tbody></table>
-    <p class="note">Trained to 2022, calibrated on 2023, scored on 428 listings from 2024 to 23 Oct 2026, with filed ranges read from EDGAR for 1,171 of 1,486 deals. The preregistered verdict is <b>reference stands</b>: across every listing the model's band is twice as wide. On the listings the gate publishes, the band is narrower than the reference's, but it <b>under-covers: 68% against an 80% target</b>. So read a published band as tighter than the evidence supports, not as a guarantee. The median's error is 22.6% of the offer, against 23.6% for "it closes at the offer". The gate withheld 325 of 428 listings: 240 as <code>too_wide</code> and 85 as <code>no_range</code>. The calculator above uses the same model refitted for the demo: trained to 2023 and calibrated on 2024 onward. The grey band is the reference: offer × the calibration window's 10th–90th percentile first-day move.</p>
-  </div>
+  <section id="record">
+    <div class="eyebrow">Track record</div>
+    <h2 class="sh">Scored on 428 IPOs it never saw</h2>
+    <p class="sd">Trained on 2019–2022, calibrated on 2023, scored from January 2024 to October 2026. The rule for winning was written down first: be narrower than a simple benchmark at the same coverage.</p>
+    <div class="card tablewrap"><table>
+      <thead><tr><th>Scored set</th><th>Listings</th><th>Coverage (target 80%)</th><th>Band width, × offer</th></tr></thead>
+      <tbody>
+        <tr><td>Model, every listing</td><td>428</td><td>83.6%</td><td>1.37</td></tr>
+        <tr><td>Benchmark, every listing</td><td>428</td><td>81.1%</td><td>0.67</td></tr>
+        <tr class="hl"><td>Model, the 103 the gate publishes</td><td>103</td><td>68.0%</td><td>0.50</td></tr>
+        <tr><td>Benchmark, the same 103</td><td>103</td><td>77.7%</td><td>0.67</td></tr>
+        <tr><td>Model, deals of $500M or more</td><td>61</td><td>75.4%</td><td>0.55</td></tr>
+      </tbody></table></div>
+    <div class="card verdictbox" style="margin-top:16px">
+      <p><b style="color:var(--ink)">Verdict: the benchmark stands.</b> Across every listing the model's band is twice as wide. Most of that is micro-caps, whose first days the deal facts can't predict. Its median misses by 22.6% of the offer on average, against 23.6% for "it closes at the offer".</p>
+      <p>Where the gate publishes, the band is a quarter narrower, but it caught only 68% of outcomes against an 80% target. An earlier, better result on this subset did not replicate. Read a published band as tighter than the evidence supports. The benchmark is the grey band in the calculator: the offer times the usual spread of first-day moves.</p>
+    </div>
+  </section>
 
   <footer>
     <div id="selfcheck" class="check">checking the page against the Python model…</div>
-    <p class="needs-model">Model fitted by <code>docs/export_model.py</code> on listings through <span id="through"></span>; <span id="ntrain"></span>.</p><p> Filing facts: Anthropic's S-1 of 26 Oct 2026 (Nasdaq Global Select, ticker ANT, range and share count blank). Raise size ($60–100B) and the week of 16 November are press reports, not filed. Research tooling, not investment advice; the first-day move is not an investable return.</p>
-    <p><a href="https://github.com/henryzhangpku/ipo-price-model">github.com/henryzhangpku/ipo-price-model</a> · <a href="https://github.com/henryzhangpku/ipo-price-model/blob/main/METHODOLOGY.md">methodology</a></p>
+    <p class="needs-model">Model fitted by <code>docs/export_model.py</code> on listings through <span id="through"></span>: <span id="ntrain"></span>.</p>
+    <p>Filed facts: Anthropic's S-1 of 26 Oct 2026 names Nasdaq Global Select and the ticker ANT, and leaves the range and share count blank. The $60–100B raise and the week of 16 November are press reports, not filings. Not affiliated with Anthropic. Research tooling, not investment advice; a first-day move is not a return an investor can capture.</p>
+    <p><a href="https://github.com/henryzhangpku/ipo-price-model">Code (MIT)</a> · <a href="https://github.com/henryzhangpku/ipo-price-model/blob/main/METHODOLOGY.md">Methodology</a> · Henry Zhang</p>
   </footer>
-</main>
+</div>
 
 <script>
 (async function(){
@@ -236,24 +346,75 @@ body.nomodel .pending{display:block}
 
   const money = v => '$' + (v >= 100 ? v.toFixed(0) : v.toFixed(2));
   const bn = v => v >= 1e9 ? '$' + (v/1e9).toFixed(v >= 1e10 ? 0 : 1) + 'B' : '$' + (v/1e6).toFixed(0) + 'M';
-  const pct = v => (v >= 0 ? '+' : '') + (v*100).toFixed(1) + '%';
+  const pct = v => (v >= 0 ? '+' : '−') + Math.abs(v*100).toFixed(1) + '%';
+  const pill = p => p.published ? '<span class="pill pos">published</span>' : `<span class="pill warn">withheld · ${p.reason}</span>`;
   $('ddate').textContent = M.decision_date;
-  $('regime').textContent = `${M.regime.regime_n} listings, median first day ${pct(Math.exp(M.regime.regime_first_day_median)-1)}`;
+  $('regime').textContent = `${M.regime.regime_n} listings in 90 days, median first day ${pct(Math.exp(M.regime.regime_first_day_median)-1)}`;
   $('through').textContent = M.data_through;
   $('ntrain').textContent = `${M.n_train} training and ${M.n_calib} calibration listings, trained through ${M.train_end}`;
 
-  const RANGE_REASONS = {
-    no_range: 'No filed range, so the most informative T-1 fact is missing. The band below is shown for audit, not for use.',
-    thin_regime: `Fewer than ${M.gate.min_regime_n} listings closed in the last 90 days: the market has not spoken recently enough.`,
+  const REASONS = {
+    no_range: 'No filed range: the most informative fact the night before is missing. The band is shown for audit, not for use.',
+    thin_regime: `Fewer than ${M.gate.min_regime_n} IPOs in the last 90 days: the market hasn't spoken recently enough.`,
     too_wide: `The 80% band spans more than ${M.gate.max_rel_width*100}% of the offer: honest, and too wide to be useful.`,
   };
 
+  // ---- the ANT card: a fixed scenario so the headline doesn't move with the calculator
+  const base = {low: 40, high: 44, deal: 60e9, exchange: 'NASDAQ Global Select'};
+  const ph = price({...base, offer: 44});
+  $('heroMove').textContent = pct(ph.point/44-1);
+  $('heroPill').innerHTML = `80% band <small>${pct(ph.lo/44-1)} to ${pct(ph.hi/44-1)}</small>`;
+  $('heroBand').textContent = `Median first close against the offer, for a ${bn(base.deal)} raise priced at the top of a placeholder $${base.low}–$${base.high} range. Today the S-1 has no range, so the gate withholds; this is the number it gives the moment one is filed.`;
+  $('heroDeal').textContent = `${bn(base.deal)} raise`;
+  $('stGate').innerHTML = ph.published ? '<span style="color:var(--pos)">Published</span>' : 'Withheld';
+  $('stRegime').textContent = `${M.regime.regime_n} IPOs · ${pct(Math.exp(M.regime.regime_first_day_median)-1)}`;
+  $('stMax').textContent = `${bn(M.train_max_deal)} · ANT is ${(base.deal/M.train_max_deal).toFixed(1)}×`;
+  $('stCheck').textContent = `${ok}/${M.vectors.length} match`;
+
+  (function sweep(){
+    const svg = $('sweep');
+    const a = base.low * 0.85, b = base.high * 1.2, N = 120;
+    const pts = [];
+    for (let i = 0; i <= N; i++){ const o = a + (b - a) * i / N; const p = price({...base, offer: o}); pts.push({o, m: p.point/o-1, lo: p.lo/o-1, hi: p.hi/o-1}); }
+    const ys = pts.flatMap(p => [p.lo, p.hi]).concat([0]);
+    let mn = Math.min(...ys), mx = Math.max(...ys); const pad = (mx-mn)*0.08; mn -= pad; mx += pad;
+    const L = 56, R = 892, T = 10, B = 226;
+    const X = o => L + (o - a) / (b - a) * (R - L), Y = v => B - (v - mn) / (mx - mn) * (B - T);
+    let s = `<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--band)" stop-opacity=".22"/><stop offset="1" stop-color="var(--band)" stop-opacity=".06"/></linearGradient></defs>`;
+    const step = (mx - mn) > 0.4 ? 0.1 : 0.05;
+    for (let v = Math.ceil(mn/step)*step; v <= mx; v += step){
+      s += `<line x1="${L}" x2="${R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${Math.abs(v) < 1e-9 ? 'var(--faint)' : 'var(--line)'}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${(v*100).toFixed(0)}%</text>`;
+    }
+    s += `<rect x="${X(base.low)}" y="${T}" width="${X(base.high)-X(base.low)}" height="${B-T}" fill="var(--tint)" stroke="var(--line)"/>`;
+    s += `<text x="${(X(base.low)+X(base.high))/2}" y="${T+18}" text-anchor="middle">filed range</text>`;
+    s += `<path d="M${pts.map(p=>X(p.o).toFixed(1)+','+Y(p.hi).toFixed(1)).join('L')}L${pts.slice().reverse().map(p=>X(p.o).toFixed(1)+','+Y(p.lo).toFixed(1)).join('L')}Z" fill="url(#bg)"/>`;
+    s += `<path d="M${pts.map(p=>X(p.o).toFixed(1)+','+Y(p.m).toFixed(1)).join('L')}" fill="none" stroke="var(--band)" stroke-width="2.5" stroke-linejoin="round"/>`;
+    const labs = [[base.low*0.9,'below'],[(base.low+base.high)/2,'within'],[base.high*1.1,'above']];
+    labs.forEach(([o,t]) => { s += `<text x="${X(o)}" y="${B+24}" text-anchor="middle">${t}</text>`; });
+    s += `<text x="${X(base.low)}" y="${B+24}" text-anchor="middle">$${base.low}</text><text x="${X(base.high)}" y="${B+24}" text-anchor="middle">$${base.high}</text>`;
+    s += `<circle cx="${X(44)}" cy="${Y(ph.point/44-1)}" r="5" fill="var(--band)" stroke="var(--panel)" stroke-width="2"/>`;
+    s += `<text class="hl" x="${X(44)+10}" y="${Y(ph.point/44-1)-10}">${pct(ph.point/44-1)}</text>`;
+    svg.innerHTML = s;
+  })();
+
+  $('hdDeal').textContent = bn(base.deal); $('hdRange').textContent = `$${base.low}–$${base.high}`;
+  {
+    const rows = [['10% above the range', 48.4], ['At the top of the range', 44], ['Mid-range', 42], ['8% below the range', 36.8]];
+    const tb = document.querySelector('#headline tbody');
+    rows.forEach(([lab, o]) => {
+      const p = price({...base, offer: o});
+      tb.insertAdjacentHTML('beforeend', `<tr${o === 44 ? ' class="hl"' : ''}><td>${lab}</td><td>${pct(p.point/o-1)}</td><td>${pct(p.lo/o-1)} to ${pct(p.hi/o-1)}</td><td>${pill(p)}</td></tr>`);
+    });
+    const p0 = price({...base, low: null, high: null, offer: 44});
+    tb.insertAdjacentHTML('beforeend', `<tr><td>No range filed (today)</td><td>${pct(p0.point/44-1)}</td><td>${pct(p0.lo/44-1)} to ${pct(p0.hi/44-1)}</td><td>${pill(p0)}</td></tr>`);
+  }
+
+  // ---- calculator
   function read(){
     const has = $('hasRange').checked;
     return {offer: +$('offer').value, low: has ? +$('low').value : null, high: has ? +$('high').value : null,
             deal: +$('deal').value * 1e9, exchange: $('exch').value};
   }
-
   function drawBand(inp, p){
     const svg = $('bandsvg');
     const vals = [p.lo, p.hi, p.ref_lo, p.ref_hi, inp.offer].concat(inp.low != null ? [inp.low, inp.high] : []);
@@ -262,44 +423,15 @@ body.nomodel .pending{display:block}
     const X = v => 20 + (v - mn) / (mx - mn) * 560;
     const rows = [];
     const lane = (y, label, a, b, fill, stroke) =>
-      `<text x="20" y="${y-6}">${label}</text><rect x="${X(a)}" y="${y}" width="${Math.max(2, X(b)-X(a))}" height="14" rx="3" fill="${fill}" stroke="${stroke}"/>` +
+      `<text x="20" y="${y-6}">${label}</text><rect x="${X(a)}" y="${y}" width="${Math.max(2, X(b)-X(a))}" height="14" rx="4" fill="${fill}" stroke="${stroke}"/>` +
       `<text x="${X(a)}" y="${y+28}" text-anchor="middle">${money(a)}</text><text x="${X(b)}" y="${y+28}" text-anchor="middle">${money(b)}</text>`;
-    if (inp.low != null) rows.push(lane(18, 'filed range', inp.low, inp.high, 'var(--accent-soft)', 'var(--accent)'));
-    rows.push(lane(64, p.published ? 'model 80% band' : 'model 80% band (withheld, audit only)', p.lo, p.hi, 'var(--band-soft)', 'var(--band)'));
+    if (inp.low != null) rows.push(lane(18, 'Filed range', inp.low, inp.high, 'var(--tint)', 'var(--line-strong)'));
+    rows.push(lane(64, p.published ? 'Model 80% band' : 'Model 80% band (withheld, audit only)', p.lo, p.hi, 'var(--band-soft)', 'var(--band)'));
     rows.push(`<line x1="${X(p.point)}" x2="${X(p.point)}" y1="60" y2="82" stroke="var(--band)" stroke-width="3"/>`);
-    rows.push(lane(110, 'reference: offer × calibration-window 10–90%', p.ref_lo, p.ref_hi, 'transparent', 'var(--ref)'));
-    rows.push(`<line x1="${X(inp.offer)}" x2="${X(inp.offer)}" y1="8" y2="128" stroke="var(--ink)" stroke-dasharray="3 3"/><text x="${X(inp.offer)+4}" y="146" fill="var(--ink)">offer ${money(inp.offer)}</text>`);
+    rows.push(lane(110, 'Benchmark: offer × usual first-day spread', p.ref_lo, p.ref_hi, 'transparent', 'var(--ref)'));
+    rows.push(`<line x1="${X(inp.offer)}" x2="${X(inp.offer)}" y1="8" y2="128" stroke="var(--ink)" stroke-dasharray="3 3" opacity=".7"/><text x="${X(inp.offer)+4}" y="146" fill="var(--ink)">offer ${money(inp.offer)}</text>`);
     svg.innerHTML = rows.join('');
   }
-
-  function drawSweep(inp){
-    const svg = $('sweep');
-    const has = inp.low != null;
-    const a = has ? inp.low * 0.85 : inp.offer * 0.8, b = has ? inp.high * 1.2 : inp.offer * 1.25;
-    const pts = [];
-    for (let i = 0; i <= 80; i++){ const o = a + (b - a) * i / 80; pts.push({o, ...price({...inp, offer: o})}); }
-    const ys = pts.flatMap(p => [p.lo, p.hi, p.o]);
-    let mn = Math.min(...ys), mx = Math.max(...ys); const pad = (mx-mn)*0.06; mn -= pad; mx += pad;
-    const L = 56, R = 880, T = 16, B = 262;
-    const X = o => L + (o - a) / (b - a) * (R - L), Y = v => B - (v - mn) / (mx - mn) * (B - T);
-    let s = '';
-    if (has) s += `<rect x="${X(inp.low)}" y="${T}" width="${X(inp.high)-X(inp.low)}" height="${B-T}" fill="var(--accent-soft)" opacity=".6"/><text x="${(X(inp.low)+X(inp.high))/2}" y="${T+12}" text-anchor="middle" fill="var(--accent)">filed range</text>`;
-    s += `<path d="M${pts.map(p=>X(p.o)+','+Y(p.hi)).join('L')}L${pts.slice().reverse().map(p=>X(p.o)+','+Y(p.lo)).join('L')}Z" fill="var(--band-soft)" stroke="none"/>`;
-    s += `<path d="M${pts.map(p=>X(p.o)+','+Y(p.point)).join('L')}" fill="none" stroke="var(--band)" stroke-width="2"/>`;
-    s += `<path d="M${X(a)},${Y(a)}L${X(b)},${Y(b)}" stroke="var(--ink)" stroke-dasharray="4 4" fill="none" opacity=".6"/>`;
-    pts.filter((_, i) => i % 4 === 0).forEach(p => {
-      s += `<circle cx="${X(p.o)}" cy="${Y(p.point)}" r="3.2" fill="${p.published ? 'var(--band)' : 'var(--panel)'}" stroke="var(--band)" stroke-width="1.5"/>`;
-    });
-    for (let i = 0; i <= 5; i++){
-      const v = mn + (mx - mn) * i / 5, o = a + (b - a) * i / 5;
-      s += `<line x1="${L}" x2="${R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${money(v)}</text>`;
-      s += `<text x="${X(o)}" y="${B+18}" text-anchor="middle">${money(o)}</text>`;
-    }
-    s += `<text x="${(L+R)/2}" y="${B+34}" text-anchor="middle">offer price</text>`;
-    s += `<line x1="${X(inp.offer)}" x2="${X(inp.offer)}" y1="${T}" y2="${B}" stroke="var(--accent)" stroke-width="1.5"/>`;
-    svg.innerHTML = s;
-  }
-
   function render(){
     const inp = read();
     if (!(inp.offer > 0 && inp.deal > 0) || (inp.low != null && !(inp.low > 0 && inp.high >= inp.low))) return;
@@ -307,48 +439,36 @@ body.nomodel .pending{display:block}
     const v = $('verdict');
     v.className = 'verdict ' + (p.published ? 'published' : 'withheld');
     v.innerHTML = p.published
-      ? `<b>Published.</b> Priced <b>${{above:'above', top:'at the top of', within:'within', below:'below'}[p.pvr]}</b> the filed range; the gate's three checks pass.`
-      : `<b>Withheld · ${p.reason}.</b> ${RANGE_REASONS[p.reason]}`;
-    $('point').innerHTML = money(p.point);
-    $('band').innerHTML = `${money(p.lo)}<small> – </small>${money(p.hi)}`;
-    $('move').innerHTML = `${pct(p.point/inp.offer-1)}`;
-    $('width').innerHTML = `${(p.rel_width*100).toFixed(0)}%`;
+      ? `<span><b>Published.</b> Priced ${{above:'above', top:'at the top of', within:'within', below:'below'}[p.pvr]} the filed range; all three gate checks pass.</span>`
+      : `<span><b>Withheld · ${p.reason}.</b> ${REASONS[p.reason]}</span>`;
+    $('point').textContent = money(p.point);
+    $('band').textContent = `${money(p.lo)}–${money(p.hi).slice(1)}`;
+    $('move').textContent = pct(p.point/inp.offer-1);
+    $('width').textContent = `${(p.rel_width*100).toFixed(0)}%`;
     drawBand(inp, p);
-    drawSweep(inp);
     const ratio = inp.deal / M.train_max_deal;
-    $('ood').innerHTML = ratio > 1.5 ? `<div class="flag"><b>Outside the evidence.</b> A ${bn(inp.deal)} deal is ${ratio.toFixed(0)}× the largest listing in the training window (${bn(M.train_max_deal)}). Gradient-boosted trees do not extrapolate: every deal above the largest split is treated like the largest deal they saw. The gate has no check for this, so read a published band here as "what a very large 2019–2023 listing did", not as a forecast for a listing of a size the US market has never priced.</div>` : '';
+    $('ood').innerHTML = ratio > 1.5 ? `<div class="flag"><b>Outside the evidence.</b> A ${bn(inp.deal)} deal is ${ratio.toFixed(1)}× the largest listing in the training window (${bn(M.train_max_deal)}). Tree models don't extrapolate: anything bigger is treated like the biggest deal they saw. Read this band as "what the very largest past IPOs did", not as a forecast for a deal the US market has never priced.</div>` : '';
   }
-
-  document.querySelectorAll('.presets button').forEach(btn => btn.addEventListener('click', () => {
+  function syncRange(){ ['low','high'].forEach(id => $(id).disabled = !$('hasRange').checked); }
+  document.querySelectorAll('#presets button').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('#presets button').forEach(b => b.classList.toggle('on', b === btn));
     const lo = +$('low').value || 40, hi = +$('high').value || 44;
     $('hasRange').checked = btn.dataset.p !== 'norange';
     $('offer').value = {top: hi, above: +(hi*1.1).toFixed(1), mid: (lo+hi)/2, below: +(lo*0.92).toFixed(1), norange: $('offer').value}[btn.dataset.p];
     syncRange(); render();
   }));
-  function syncRange(){ ['low','high'].forEach(id => $(id).disabled = !$('hasRange').checked); }
-  ['low','high','offer','deal','exch','hasRange'].forEach(id => $(id).addEventListener('input', () => { syncRange(); render(); }));
+  ['low','high','offer','deal','exch','hasRange'].forEach(id => $(id).addEventListener('input', () => {
+    document.querySelectorAll('#presets button').forEach(b => b.classList.remove('on'));
+    syncRange(); render();
+  }));
 
+  // ---- evidence table
   const tb = document.querySelector('#largest tbody');
-  M.largest.forEach(r => {
-    tb.insertAdjacentHTML('beforeend', `<tr><td>${r.symbol}</td><td>${r.name}</td><td>${r.date}</td><td>${bn(r.deal)}</td><td>${money(r.offer)}</td><td>${money(r.first_close)}</td><td>${pct(r.first_day)}</td></tr>`);
+  M.largest.slice(0, 10).forEach(r => {
+    tb.insertAdjacentHTML('beforeend', `<tr><td><b>${r.symbol}</b></td><td>${r.date}</td><td>${bn(r.deal)}</td><td>${money(r.offer)}</td><td>${money(r.first_close)}</td><td>${pct(r.first_day)}</td></tr>`);
   });
-  $('largestNote').textContent = `The fifteen largest deals in the data (through ${M.data_through}). The biggest is ${bn(M.all_max_deal)}; the reported ANT raise ($60–100B) is ${Math.round(60e9/M.all_max_deal)}–${Math.round(100e9/M.all_max_deal)}× that.`;
+  $('largestNote').textContent = `The ten largest US listings since 2019 (data through ${M.data_through}). The biggest is ${bn(M.all_max_deal)}. A $60–100B ANT raise would be ${Math.round(60e9/M.all_max_deal)}–${Math.round(100e9/M.all_max_deal)}× that, so every number above is an extrapolation and is labeled as one.`;
 
-  {
-    const base = {low: 40, high: 44, deal: 60e9, exchange: 'NASDAQ Global Select'};
-    $('hdDeal').textContent = bn(base.deal); $('hdRange').textContent = `$${base.low}–$${base.high}`;
-    const rows = [['above the range (+10%)', 48.4], ['at the top of the range', 44], ['mid-range', 42], ['below the range (−8%)', 36.8]];
-    const tb2 = document.querySelector('#headline tbody');
-    rows.forEach(([lab, o]) => {
-      const p = price({...base, offer: o});
-      tb2.insertAdjacentHTML('beforeend', `<tr><td>${lab}</td><td></td><td>${pct(p.point/o-1)}</td><td>${pct(p.lo/o-1)} to ${pct(p.hi/o-1)}</td><td>${p.published ? '<span class="pill published">published</span>' : '<span class="pill withheld">' + p.reason + '</span>'}</td></tr>`);
-    });
-    const ph = price({...base, offer: 44});
-    $('heroMove').textContent = pct(ph.point/44-1);
-    $('heroBand').textContent = `median · 80% band ${pct(ph.lo/44-1)} to ${pct(ph.hi/44-1)} · ${bn(base.deal)} raise`;
-    const p0 = price({...base, low: null, high: null, offer: 44});
-    tb2.insertAdjacentHTML('beforeend', `<tr><td>no range filed (today)</td><td></td><td>${pct(p0.point/44-1)}</td><td>${pct(p0.lo/44-1)} to ${pct(p0.hi/44-1)}</td><td><span class="pill withheld">${p0.reason}</span></td></tr>`);
-  }
   syncRange(); render();
 })();
 </script>
