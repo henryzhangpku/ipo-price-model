@@ -2,6 +2,10 @@
 
 **Price a company the day before it trades — and know when not to.**
 
+**Live demo: [pricing Anthropic (ANT) the night before it trades](https://henryzhangpku.github.io/ipo-price-model/)** —
+the fitted model, evaluated tree by tree in the browser, on scenario inputs
+for the November 2026 Nasdaq listing. Rebuild it with `python docs/export_model.py --date 2026-11-16`.
+
 The day before a listing opens, the public record is thin: an offer price, a
 filed range, a deal size, an exchange, and what the last few listings did.
 This is a model that turns exactly that into a calibrated interval for the
