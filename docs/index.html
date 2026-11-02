@@ -145,16 +145,17 @@ body.nomodel .pending{display:block}
     <div class="panel"><h3>A gate that says no</h3><p><code>no_range</code> → <code>thin_regime</code> (&lt;5 recent listings) → <code>too_wide</code> (band &gt; 60% of offer). The gate never narrows a band; it decides whether to show one.</p></div>
   </div>
 
-  <h2>Track record (from the repo, test window 2024 on)</h2>
+  <h2>Track record: this fit, test window 2024 to Oct 2026</h2>
   <div class="panel tablewrap"><table>
-    <thead><tr><th>scored set</th><th></th><th>listings</th><th>coverage</th><th>mean width, × offer</th></tr></thead>
+    <thead><tr><th>scored set</th><th></th><th>listings</th><th>coverage (target 0.80)</th><th>mean width, × offer</th></tr></thead>
     <tbody>
-      <tr><td>model, every listing</td><td></td><td>332</td><td>0.877</td><td>1.67</td></tr>
-      <tr><td>reference, every listing</td><td></td><td>332</td><td>0.831</td><td>0.70</td></tr>
-      <tr><td><b>model, the 83 the gate publishes</b></td><td></td><td>83</td><td>0.843</td><td>0.51</td></tr>
-      <tr><td>reference, the same 83</td><td></td><td>83</td><td>0.831</td><td>0.70</td></tr>
+      <tr><td>model, every listing</td><td></td><td>428</td><td>0.836</td><td>1.37</td></tr>
+      <tr><td>reference, every listing</td><td></td><td>428</td><td>0.811</td><td>0.67</td></tr>
+      <tr><td><b>model, the 103 the gate publishes</b></td><td></td><td>103</td><td><b>0.680</b></td><td>0.50</td></tr>
+      <tr><td>reference, the same 103</td><td></td><td>103</td><td>0.777</td><td>0.67</td></tr>
+      <tr><td>model, deals ≥ $500M</td><td></td><td>61</td><td>0.754</td><td>0.55</td></tr>
     </tbody></table>
-    <p class="note">The preregistered verdict was <b>reference stands</b>: across every listing the model over-covers with bands twice as wide, driven by micro-caps. On the listings the gate publishes, the band is about a quarter narrower than the reference at the same coverage — a post-hoc finding, reported as one. The grey band in the chart above is that reference: offer × the calibration window's 10th–90th percentile first-day move.</p>
+    <p class="note">Trained to 2022, calibrated on 2023, scored on 428 listings from 2024 to 23 Oct 2026, with filed ranges read from EDGAR for 1,171 of 1,486 deals. The preregistered verdict is <b>reference stands</b>: across every listing the model's band is twice as wide. On the listings the gate publishes, the band is narrower than the reference's, but it <b>under-covers: 68% against an 80% target</b>. So read a published band as tighter than the evidence supports, not as a guarantee. The median's error is 22.6% of the offer, against 23.6% for "it closes at the offer". The gate withheld 325 of 428 listings: 240 as <code>too_wide</code> and 85 as <code>no_range</code>. The calculator above uses the same model refitted for the demo: trained to 2023 and calibrated on 2024 onward. The grey band is the reference: offer × the calibration window's 10th–90th percentile first-day move.</p>
   </div>
 
   <footer>
@@ -295,7 +296,7 @@ body.nomodel .pending{display:block}
     const v = $('verdict');
     v.className = 'verdict ' + (p.published ? 'published' : 'withheld');
     v.innerHTML = p.published
-      ? `<b>Published.</b> Priced <b>${p.pvr}</b> the filed range; the gate's three checks pass.`
+      ? `<b>Published.</b> Priced <b>${{above:'above', top:'at the top of', within:'within', below:'below'}[p.pvr]}</b> the filed range; the gate's three checks pass.`
       : `<b>Withheld · ${p.reason}.</b> ${RANGE_REASONS[p.reason]}`;
     $('point').innerHTML = money(p.point);
     $('band').innerHTML = `${money(p.lo)}<small> – </small>${money(p.hi)}`;
