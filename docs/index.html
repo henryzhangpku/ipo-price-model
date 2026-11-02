@@ -55,8 +55,8 @@ code{font:13px var(--mono);background:var(--tint);border:1px solid var(--line);p
 nav.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
 .mark{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;color:var(--ink)}
 .mark svg{width:22px;height:22px}
-nav.top .links{display:flex;gap:22px;font-size:14px}
-nav.top .links a{color:var(--muted)}
+nav.top .links{display:flex;gap:22px;font-size:14px;align-items:center}
+nav.top .links a:not(.btn){color:var(--muted)}
 @media (max-width:640px){nav.top .links .opt{display:none}}
 
 .hero{text-align:center;padding:48px 0 36px}
@@ -155,6 +155,24 @@ footer p{margin:6px 0}
 .check{font:12px var(--mono);color:var(--muted)}
 .check.bad{color:var(--warn)}
 
+.btn.sm{padding:8px 14px;font-size:13px;color:var(--btn-ink)}
+.btn.sm:hover{color:var(--btn-ink)}
+.byline{font-size:14px!important;margin:22px auto 0!important}
+.btns.left{justify-content:flex-start}
+.ctastrip{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 26px;flex-wrap:wrap;border-left:3px solid var(--accent)}
+.ctastrip p{margin:6px 0 0;color:var(--ink);font:400 20px/1.35 var(--serif);max-width:560px}
+.about{padding:26px}
+.who{display:flex;gap:20px;align-items:flex-start}
+@media (max-width:640px){.who{flex-direction:column}}
+.avatar{flex:0 0 64px;height:64px;border-radius:50%;display:grid;place-items:center;font:500 22px var(--serif);color:var(--btn-ink);background:var(--btn)}
+.bio{margin:0 0 16px;color:var(--body);font-size:16px;max-width:680px}
+.more{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+@media (max-width:800px){.more{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.more{grid-template-columns:1fr}}
+.more a{display:block;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--tint)}
+.more a:hover{text-decoration:none;border-color:var(--accent)}
+.more b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+.more span{font-size:13px;color:var(--muted)}
 body.nomodel .needs-model{display:none}
 .pending{display:none}
 body.nomodel .pending{display:block;padding:22px}
@@ -164,13 +182,14 @@ body.nomodel .pending{display:block;padding:22px}
 <div class="wrap">
   <nav class="top">
     <div class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 L10 6 L13 12" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M12 20 L17 10 L21 20" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>IPO Price Model</div>
-    <div class="links"><a href="#calc">Calculator</a><a class="opt" href="#method">Method</a><a class="opt" href="#record">Track record</a><a href="https://github.com/henryzhangpku/ipo-price-model">GitHub</a></div>
+    <div class="links"><a class="opt" href="#calc">Calculator</a><a class="opt" href="#record">Track record</a><a class="opt" href="#author">About</a><a class="btn sm" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow on LinkedIn</a></div>
   </nav>
 
   <header class="hero">
     <h1>Pricing Anthropic the night before it trades</h1>
     <p>A calibrated 80% band for ANT's first close, from only what's public the night before it lists. It runs live in your browser, and it says plainly when the evidence can't support a number.</p>
-    <div class="btns"><a class="btn" href="#calc">Try your own range</a><a class="btn ghost" href="#record">See the track record</a></div>
+    <div class="btns"><a class="btn" href="#calc">Try your own range</a><a class="btn ghost" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow the call on LinkedIn</a></div>
+    <p class="byline">Built by <a href="#author">Henry Zhang</a> · open source on <a href="https://github.com/henryzhangpku/ipo-price-model">GitHub</a></p>
   </header>
 
   <div class="card window needs-model">
@@ -191,7 +210,7 @@ body.nomodel .pending{display:block;padding:22px}
       <div class="stats">
         <div><div class="k">Gate at top of range</div><div class="v" id="stGate"></div></div>
         <div><div class="k">IPO market, last 90 days</div><div class="v" id="stRegime"></div></div>
-        <div><div class="k">Largest deal it has seen</div><div class="v" id="stMax"></div></div>
+        <div><div class="k">Largest IPO it trained on</div><div class="v" id="stMax"></div></div>
         <div><div class="k">Browser vs Python</div><div class="v" id="stCheck"></div></div>
       </div>
     </div>
@@ -205,6 +224,14 @@ body.nomodel .pending{display:block;padding:22px}
     <div class="card tablewrap">
       <table id="headline"><thead><tr><th>If ANT prices</th><th>First-day median</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
       <p class="tnote">A <span id="hdDeal"></span> raise on Nasdaq Global Select, decision date 16 November 2026. The offer level is itself a model input, so a different share price shifts these a little.</p>
+    </div>
+  </section>
+
+
+  <section class="needs-model">
+    <div class="card ctastrip">
+      <div><div class="eyebrow">The live call</div><p>I'll post the model's band the night ANT prices, then score it against the first close, hit or miss, in public.</p></div>
+      <div class="btns left"><a class="btn" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow on LinkedIn</a><a class="btn ghost" href="https://henryzhang.substack.com" target="_blank" rel="noopener">Get it by email</a></div>
     </div>
   </section>
 
@@ -246,7 +273,8 @@ body.nomodel .pending{display:block;padding:22px}
     <div class="eyebrow">Evidence</div>
     <h2 class="sh">The biggest listings the model has seen</h2>
     <p class="sd" id="largestNote"></p>
-    <div class="card tablewrap"><table id="largest"><thead><tr><th>Ticker</th><th>Listed</th><th>Deal</th><th>Offer</th><th>First close</th><th>First day</th></tr></thead><tbody></tbody></table></div>
+    <div class="card tablewrap"><table id="largest"><thead><tr><th>Ticker</th><th>Listed</th><th>Deal</th><th>Filed range</th><th>Offer</th><th>First close</th><th>First day</th></tr></thead><tbody></tbody></table>
+      <p class="tnote">* No filed range on the registration cover. COIN and RBLX were direct listings: their "deal" is registered shares at a reference price, not money raised. The gate withholds any listing without a range.</p></div>
   </section>
 
   <section id="method">
@@ -254,7 +282,7 @@ body.nomodel .pending{display:block;padding:22px}
     <h2 class="sh">Three rules, fixed before any result</h2>
     <div class="cols">
       <div class="card"><div class="num">01</div><h3>Only what's known the night before</h3><p>The offer, the filed range (read from the last S-1/A on EDGAR before the first trade), deal size, venue, and a 90-day read of how recent IPOs traded. A leakage check raises on anything else.</p></div>
-      <div class="card"><div class="num">02</div><h3>A band with a coverage guarantee</h3><p>Gradient-boosted 10th, 50th and 90th percentile models of the first-day move, then widened on a later, separate window (conformal calibration) so the 80% band holds on data the model hasn't seen.</p></div>
+      <div class="card"><div class="num">02</div><h3>A band calibrated out of sample</h3><p>Gradient-boosted 10th, 50th and 90th percentile models of the first-day move, then widened on a later, separate window (conformal calibration). That makes 80% coverage hold on average across listings, provided the future resembles the calibration window. It promises nothing for any one slice, as the track record shows.</p></div>
       <div class="card"><div class="num">03</div><h3>A gate that says no</h3><p>No filed range, fewer than five recent IPOs, or a band wider than 60% of the offer: any one of these and the number is withheld. The gate never narrows a band; it only decides whether to show one.</p></div>
     </div>
   </section>
@@ -275,6 +303,27 @@ body.nomodel .pending{display:block;padding:22px}
     <div class="card verdictbox" style="margin-top:16px">
       <p><b style="color:var(--ink)">Verdict: the benchmark stands.</b> Across every listing the model's band is twice as wide. Most of that is micro-caps, whose first days the deal facts can't predict. Its median misses by 22.6% of the offer on average, against 23.6% for "it closes at the offer".</p>
       <p>Where the gate publishes, the band is a quarter narrower, but it caught only 68% of outcomes against an 80% target. An earlier, better result on this subset did not replicate. Read a published band as tighter than the evidence supports. The benchmark is the grey band in the calculator: the offer times the usual spread of first-day moves.</p>
+      <p>The live calculator uses the same method refitted on more recent data: trained through 2023 and calibrated on 2024 to October 2026. The table above scores the method; the ANT number is the refit's.</p>
+    </div>
+  </section>
+
+  <section id="author">
+    <div class="eyebrow">About</div>
+    <h2 class="sh">Built by Henry Zhang</h2>
+    <div class="card about">
+      <div class="who">
+        <div class="avatar">HZ</div>
+        <div>
+          <p class="bio">Quantitative engineer. Fifteen years building research platforms and production trading systems, including eight at BlackRock and two at PIMCO. I build pricing for things that don't trade yet, and I publish the misses with the hits.</p>
+          <div class="btns left"><a class="btn" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Connect on LinkedIn</a><a class="btn ghost" href="https://henryzhang.substack.com" target="_blank" rel="noopener">Substack</a><a class="btn ghost" href="https://github.com/henryzhangpku" target="_blank" rel="noopener">GitHub</a><a class="btn ghost" href="https://www.officialhenryzhang.com" target="_blank" rel="noopener">Website</a></div>
+        </div>
+      </div>
+      <div class="more">
+        <a href="https://github.com/henryzhangpku/gpu-price-index"><b>GPU price index</b><span>A daily benchmark for GPU compute, built like a settlement index.</span></a>
+        <a href="https://github.com/henryzhangpku/autonomous-quant-researcher"><b>Autonomous Quant Researcher</b><span>An LLM proposes; trusted code decides; every refutation kept.</span></a>
+        <a href="https://github.com/henryzhangpku/research2prod"><b>research2prod</b><span>Write the signal once: research code that is already production code.</span></a>
+        <a href="https://github.com/henryzhangpku/mft-engine"><b>mft-engine</b><span>One Rust code path for backtest and live.</span></a>
+      </div>
     </div>
   </section>
 
@@ -282,7 +331,7 @@ body.nomodel .pending{display:block;padding:22px}
     <div id="selfcheck" class="check">checking the page against the Python model…</div>
     <p class="needs-model">Model fitted by <code>docs/export_model.py</code> on listings through <span id="through"></span>: <span id="ntrain"></span>.</p>
     <p>Filed facts: Anthropic's S-1 of 26 Oct 2026 names Nasdaq Global Select and the ticker ANT, and leaves the range and share count blank. The $60–100B raise and the week of 16 November are press reports, not filings. Not affiliated with Anthropic. Research tooling, not investment advice; a first-day move is not a return an investor can capture.</p>
-    <p><a href="https://github.com/henryzhangpku/ipo-price-model">Code (MIT)</a> · <a href="https://github.com/henryzhangpku/ipo-price-model/blob/main/METHODOLOGY.md">Methodology</a> · Henry Zhang</p>
+    <p><a href="https://github.com/henryzhangpku/ipo-price-model">Code (MIT)</a> · <a href="https://github.com/henryzhangpku/ipo-price-model/blob/main/METHODOLOGY.md">Methodology</a> · © 2026 Henry Zhang · <a href="https://www.linkedin.com/in/henryzhang99/">LinkedIn</a> · <a href="https://henryzhang.substack.com">Substack</a></p>
   </footer>
 </div>
 
@@ -368,7 +417,7 @@ body.nomodel .pending{display:block;padding:22px}
   $('heroDeal').textContent = `${bn(base.deal)} raise`;
   $('stGate').innerHTML = ph.published ? '<span style="color:var(--pos)">Published</span>' : 'Withheld';
   $('stRegime').textContent = `${M.regime.regime_n} IPOs · ${pct(Math.exp(M.regime.regime_first_day_median)-1)}`;
-  $('stMax').textContent = `${bn(M.train_max_deal)} · ANT is ${(base.deal/M.train_max_deal).toFixed(1)}×`;
+  $('stMax').textContent = `${M.train_max_ranged_symbol} ${bn(M.train_max_ranged_deal)} · ANT ${Math.round(base.deal/M.train_max_ranged_deal)}×`;
   $('stCheck').textContent = `${ok}/${M.vectors.length} match`;
 
   (function sweep(){
@@ -446,8 +495,8 @@ body.nomodel .pending{display:block;padding:22px}
     $('move').textContent = pct(p.point/inp.offer-1);
     $('width').textContent = `${(p.rel_width*100).toFixed(0)}%`;
     drawBand(inp, p);
-    const ratio = inp.deal / M.train_max_deal;
-    $('ood').innerHTML = ratio > 1.5 ? `<div class="flag"><b>Outside the evidence.</b> A ${bn(inp.deal)} deal is ${ratio.toFixed(1)}× the largest listing in the training window (${bn(M.train_max_deal)}). Tree models don't extrapolate: anything bigger is treated like the biggest deal they saw. Read this band as "what the very largest past IPOs did", not as a forecast for a deal the US market has never priced.</div>` : '';
+    const ratio = inp.deal / M.train_max_ranged_deal;
+    $('ood').innerHTML = ratio > 1.5 ? `<div class="flag"><b>Outside the evidence.</b> A ${bn(inp.deal)} raise is ${ratio.toFixed(1)}× the largest IPO the model trained on (${M.train_max_ranged_symbol}, ${bn(M.train_max_ranged_deal)}). Tree models don't extrapolate: anything bigger is treated like the biggest deals they saw. Read this band as "what the very largest past IPOs did", not as a forecast for a deal the US market has never priced.</div>` : '';
   }
   function syncRange(){ ['low','high'].forEach(id => $(id).disabled = !$('hasRange').checked); }
   document.querySelectorAll('#presets button').forEach(btn => btn.addEventListener('click', () => {
@@ -465,9 +514,10 @@ body.nomodel .pending{display:block;padding:22px}
   // ---- evidence table
   const tb = document.querySelector('#largest tbody');
   M.largest.slice(0, 10).forEach(r => {
-    tb.insertAdjacentHTML('beforeend', `<tr><td><b>${r.symbol}</b></td><td>${r.date}</td><td>${bn(r.deal)}</td><td>${money(r.offer)}</td><td>${money(r.first_close)}</td><td>${pct(r.first_day)}</td></tr>`);
+    const rg = r.has_range ? `${money(r.low)}–${money(r.high).slice(1)}` : '<span style="color:var(--muted)">none*</span>';
+    tb.insertAdjacentHTML('beforeend', `<tr><td><b>${r.symbol}</b></td><td>${r.date}</td><td>${bn(r.deal)}</td><td>${rg}</td><td>${money(r.offer)}</td><td>${money(r.first_close)}</td><td>${pct(r.first_day)}</td></tr>`);
   });
-  $('largestNote').textContent = `The ten largest US listings since 2019 (data through ${M.data_through}). The biggest is ${bn(M.all_max_deal)}. A $60–100B ANT raise would be ${Math.round(60e9/M.all_max_deal)}–${Math.round(100e9/M.all_max_deal)}× that, so every number above is an extrapolation and is labeled as one.`;
+  $('largestNote').textContent = `The ten largest US listings since 2019 (data through ${M.data_through}). The largest IPO the model trained on with a filed range is ${M.train_max_ranged_symbol} at ${bn(M.train_max_ranged_deal)}. A $60–100B ANT raise would be ${Math.round(60e9/M.train_max_ranged_deal)}–${Math.round(100e9/M.train_max_ranged_deal)}× that, so every ANT number here is an extrapolation and is labeled as one.`;
 
   syncRange(); render();
 })();

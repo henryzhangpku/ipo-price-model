@@ -95,7 +95,11 @@ def main() -> None:
     big = df.assign(first_day=np.exp(y) - 1).sort_values("deal_usd", ascending=False).head(15)
     largest = [{"symbol": r.symbol, "name": str(r.name)[:40], "date": str(pd.Timestamp(r.ipo_date).date()),
                 "deal": float(r.deal_usd), "offer": float(r.offer_price), "first_close": float(r.first_close),
-                "first_day": float(r.first_day)} for r in big.itertuples()]
+                "first_day": float(r.first_day), "has_range": bool(r.has_range),
+                "low": float(r.price_low) if pd.notna(r.price_low) else None,
+                "high": float(r.price_high) if pd.notna(r.price_high) else None} for r in big.itertuples()]
+    # the largest deal with a filed range: a direct listing's "deal" is registered shares at a reference price, not a raise
+    ranged = df.loc[tr & df["has_range"].astype(bool)].sort_values("deal_usd").iloc[-1]
 
     cfg = gate_mod.GateConfig()
     out = {
@@ -105,6 +109,7 @@ def main() -> None:
         "n_train": model.n_train_, "n_calib": model.n_calib_, "train_end": a.train_end,
         "data_through": str(pd.to_datetime(df["ipo_date"]).max().date()),
         "train_max_deal": float(df.loc[tr, "deal_usd"].max()), "all_max_deal": float(df["deal_usd"].max()),
+        "train_max_ranged_deal": float(ranged["deal_usd"]), "train_max_ranged_symbol": str(ranged["symbol"]),
         "regime": regime, "gate": {"min_regime_n": cfg.min_regime_n, "max_rel_width": cfg.max_rel_width},
         "models": {"q_lo": _trees(model.q_lo_), "q_med": _trees(model.q_med_), "q_hi": _trees(model.q_hi_)},
         "vectors": vectors, "largest": largest,
