@@ -162,9 +162,12 @@ footer p{margin:6px 0}
 .ctastrip{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 26px;flex-wrap:wrap;border-left:3px solid var(--accent)}
 .ctastrip p{margin:6px 0 0;color:var(--ink);font:400 20px/1.35 var(--serif);max-width:560px}
 .about{padding:26px}
-.who{display:flex;gap:20px;align-items:flex-start}
+.who{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.whotext{flex:1 1 220px}
+.whotext b{display:block;font:500 22px var(--serif);color:var(--ink)}
+.whotext span{font-size:14px;color:var(--muted)}
 @media (max-width:640px){.who{flex-direction:column}}
-.avatar{flex:0 0 64px;height:64px;border-radius:50%;display:grid;place-items:center;font:500 22px var(--serif);color:var(--btn-ink);background:var(--btn)}
+.avatar{flex:0 0 56px;height:56px;border-radius:50%;display:grid;place-items:center;font:500 22px var(--serif);color:var(--btn-ink);background:var(--btn)}
 .bio{margin:0 0 16px;color:var(--body);font-size:16px;max-width:680px}
 .more{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
 @media (max-width:800px){.more{grid-template-columns:1fr 1fr}}
@@ -182,7 +185,7 @@ body.nomodel .pending{display:block;padding:22px}
 <div class="wrap">
   <nav class="top">
     <div class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 L10 6 L13 12" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M12 20 L17 10 L21 20" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>IPO Price Model</div>
-    <div class="links"><a class="opt" href="#calc">Calculator</a><a class="opt" href="#record">Track record</a><a class="opt" href="#author">About</a><a class="btn sm" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow on LinkedIn</a></div>
+    <div class="links"><a class="opt" href="#calc">Calculator</a><a class="opt" href="#record">Track record</a><a class="btn sm" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Follow on LinkedIn</a></div>
   </nav>
 
   <header class="hero">
@@ -308,21 +311,11 @@ body.nomodel .pending{display:block;padding:22px}
   </section>
 
   <section id="author">
-    <div class="eyebrow">About</div>
-    <h2 class="sh">Built by Henry Zhang</h2>
     <div class="card about">
       <div class="who">
         <div class="avatar">HZ</div>
-        <div>
-          <p class="bio">Quantitative engineer. Fifteen years building research platforms and production trading systems, including eight at BlackRock and two at PIMCO. I build pricing for things that don't trade yet, and I publish the misses with the hits.</p>
-          <div class="btns left"><a class="btn" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Connect on LinkedIn</a><a class="btn ghost" href="https://henryzhang.substack.com" target="_blank" rel="noopener">Substack</a><a class="btn ghost" href="https://github.com/henryzhangpku" target="_blank" rel="noopener">GitHub</a><a class="btn ghost" href="https://www.officialhenryzhang.com" target="_blank" rel="noopener">Website</a></div>
-        </div>
-      </div>
-      <div class="more">
-        <a href="https://github.com/henryzhangpku/gpu-price-index"><b>GPU price index</b><span>A daily benchmark for GPU compute, built like a settlement index.</span></a>
-        <a href="https://github.com/henryzhangpku/autonomous-quant-researcher"><b>Autonomous Quant Researcher</b><span>An LLM proposes; trusted code decides; every refutation kept.</span></a>
-        <a href="https://github.com/henryzhangpku/research2prod"><b>research2prod</b><span>Write the signal once: research code that is already production code.</span></a>
-        <a href="https://github.com/henryzhangpku/mft-engine"><b>mft-engine</b><span>One Rust code path for backtest and live.</span></a>
+        <div class="whotext"><b>Built by Henry Zhang</b><span>Quantitative engineer. Open source on GitHub.</span></div>
+        <div class="btns left"><a class="btn" href="https://www.linkedin.com/in/henryzhang99/" target="_blank" rel="noopener">Connect on LinkedIn</a><a class="btn ghost" href="https://github.com/henryzhangpku" target="_blank" rel="noopener">GitHub</a></div>
       </div>
     </div>
   </section>
