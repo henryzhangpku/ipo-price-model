@@ -177,6 +177,24 @@ footer .intro{margin-top:14px;color:var(--ink)}
 .more a:hover{text-decoration:none;border-color:var(--accent)}
 .more b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
 .more span{font-size:13px;color:var(--muted)}
+.live-only{display:none}
+body.live .live-only{display:block}
+.trk{padding:22px 26px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.steps li{position:relative;padding:28px 10px 0 0;font-size:13px;color:var(--muted)}
+.steps li::before{content:"";position:absolute;top:6px;left:0;width:14px;height:14px;border-radius:50%;border:2px solid var(--line-strong);background:var(--panel);z-index:1}
+.steps li::after{content:"";position:absolute;top:13px;left:14px;right:0;height:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps li.done::before{background:var(--accent);border-color:var(--accent)}
+.steps li.done::after{background:var(--accent)}
+.steps li.now::before{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.steps b{display:block;color:var(--ink);font-size:14px;font-weight:600}
+.steps li.todo b{color:var(--muted);font-weight:500}
+#trkHist th:nth-child(2),#trkHist td:nth-child(2),#trkHist th:nth-child(3),#trkHist td:nth-child(3){text-align:left}
+@media (max-width:640px){.steps{grid-template-columns:1fr}.steps li{padding:0 0 14px 26px}.steps li::before{top:3px}.steps li::after{top:18px;left:6px;width:2px;height:auto;bottom:0;right:auto}}
+.trkmeta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.trkmeta b{color:var(--ink);font-weight:500}
+.trkmeta code{font-size:12px}
 body.nomodel .needs-model{display:none}
 .pending{display:none}
 body.nomodel .pending{display:block;padding:22px}
@@ -202,10 +220,10 @@ body.nomodel .pending{display:block;padding:22px}
         <div class="logo">A</div>
         <div>
           <div class="name">Anthropic <span class="tag">ANT</span><span class="tag">Nasdaq GS</span></div>
-          <div class="sub">S-1 filed 26 Oct 2026 · reported listing week of 16 Nov · range not yet filed</div>
+          <div class="sub" id="heroSub">S-1 filed 26 Oct 2026 · reported listing week of 16 Nov · range not yet filed</div>
         </div>
       </div>
-      <div class="eyebrow">Model first-day move · if it prices at the top of its range</div>
+      <div class="eyebrow" id="heroEyebrow">Model first-day move · if it prices at the top of its range</div>
       <div class="bigrow"><span class="big" id="heroMove">—</span><span class="pill pos" id="heroPill"></span></div>
       <p class="cap" id="heroBand"></p>
       <div class="chartlab"><span>First-day move vs where the offer lands · 80% band and median</span><span id="heroDeal"></span></div>
@@ -220,10 +238,24 @@ body.nomodel .pending{display:block;padding:22px}
   </div>
   <div class="card pending">The model is being re-fitted. The live ANT numbers appear here when it lands.</div>
 
+  <section id="tracker" class="needs-model live-only">
+    <div class="eyebrow">Live tracker</div>
+    <h2 class="sh">Follow ANT to its first trade</h2>
+    <p class="sd">An automated job checks Anthropic's SEC filings and the IPO market every weekday morning and on pricing nights. The model is frozen; only public inputs move. Every change is a dated, public commit, and after the first close the band is scored, hit or miss.</p>
+    <div class="card trk">
+      <ol class="steps" id="trkSteps"></ol>
+      <div class="trkmeta" id="trkMeta"></div>
+    </div>
+    <div class="card tablewrap" style="margin-top:16px">
+      <table id="trkHist"><thead><tr><th>As of</th><th>Stage</th><th>Range</th><th>IPOs in window</th><th>At top of range: 80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
+      <p class="tnote" id="trkNote"></p>
+    </div>
+  </section>
+
   <section class="needs-model">
     <div class="eyebrow">Scenarios</div>
     <h2 class="sh">By where ANT prices against its range</h2>
-    <p class="sd">A deal that prices above its range has met more demand than its bankers expected, and that's the single most informative fact the night before. The S-1 leaves the range blank, so these use a placeholder range of <span id="hdRange"></span>. Answers are moves from the offer.</p>
+    <p class="sd">A deal that prices above its range has met more demand than its bankers expected, and that's the single most informative fact the night before. <span id="hdRangeNote">The S-1 leaves the range blank, so these use a placeholder range of</span> <span id="hdRange"></span>. Answers are moves from the offer.</p>
     <div class="card tablewrap">
       <table id="headline"><thead><tr><th>If ANT prices</th><th>First-day median</th><th>80% band</th><th>Gate</th></tr></thead><tbody></tbody></table>
       <p class="tnote">A <span id="hdDeal"></span> raise on Nasdaq Global Select, decision date 16 November 2026. The offer level is itself a model input, so a different share price shifts these a little.</p>
@@ -370,12 +402,21 @@ body.nomodel .pending{display:block;padding:22px}
   sc.textContent = `self-check: the browser reproduces the Python model on ${ok}/${M.vectors.length} test scenarios`;
   if (ok !== M.vectors.length) sc.classList.add('bad');
 
+  // ---- the daily record (tracker/tape.jsonl, mirrored to live.json); the page works without it
+  let L = null;
+  try { const r = await fetch('live.json', {cache: 'no-cache'}); if (r.ok) L = await r.json(); } catch (e) {}
+  const LR = L && L.latest;
+  if (LR){
+    document.body.classList.add('live');
+    M.regime = {regime_n: LR.regime.n, regime_first_day_median: LR.regime.median, regime_first_day_iqr: LR.regime.iqr};
+  }
+
   const money = v => '$' + (v >= 100 ? v.toFixed(0) : v.toFixed(2));
   const bn = v => v >= 1e9 ? '$' + (v/1e9).toFixed(v >= 1e10 ? 0 : 1) + 'B' : '$' + (v/1e6).toFixed(0) + 'M';
   const pct = v => (v >= 0 ? '+' : '−') + Math.abs(v*100).toFixed(1) + '%';
   const pill = p => p.published ? '<span class="pill pos">published</span>' : `<span class="pill warn">withheld · ${p.reason}</span>`;
   $('ddate').textContent = M.decision_date;
-  $('regime').textContent = `${M.regime.regime_n} listings in 90 days, median first day ${pct(Math.exp(M.regime.regime_first_day_median)-1)}`;
+  $('regime').textContent = `${M.regime.regime_n} listings in 90 days, median first day ${pct(M.regime.regime_first_day_median)}`;
   $('through').textContent = M.data_through;
   $('ntrain').textContent = `${M.n_train} training and ${M.n_calib} calibration listings, trained through ${M.train_end}`;
 
@@ -386,22 +427,51 @@ body.nomodel .pending{display:block;padding:22px}
   };
 
   // ---- the ANT card: a fixed scenario so the headline doesn't move with the calculator
-  const base = {low: 40, high: 44, deal: 60e9, exchange: 'NASDAQ Global Select'};
-  const ph = price({...base, offer: 44});
-  $('heroMove').textContent = pct(ph.point/44-1);
-  $('heroPill').innerHTML = `80% band <small>${pct(ph.lo/44-1)} to ${pct(ph.hi/44-1)}</small>`;
-  $('heroBand').textContent = `Median first close against the offer, for a ${bn(base.deal)} raise priced at the top of a placeholder $${base.low}–$${base.high} range. Today the S-1 has no range, so the gate withholds; this is the number it gives the moment one is filed.`;
-  $('heroDeal').textContent = `${bn(base.deal)} raise`;
+  const filed = LR && LR.range_source === 'filed';
+  const topRec = LR && LR.scenarios.find(x => x.key === 'top');
+  const shares = LR && ((LR.filing.prospectus || {}).shares || (LR.filing.registration || {}).shares);
+  const base = {low: LR ? LR.range[0] : 40, high: LR ? LR.range[1] : 44, deal: topRec ? topRec.deal_usd : 60e9,
+                exchange: (L && L.deal.exchange) || 'NASDAQ Global Select'};
+  const dealAt = o => shares ? shares * o : base.deal;
+  const TOP = base.high;
+  const ph = price({...base, deal: dealAt(TOP), offer: TOP});
+  const call = LR && LR.call, result = LR && LR.result;
+  if (result){
+    $('heroEyebrow').textContent = `First close ${result.first_close_date} · scored against the band published ${result.band_published_as_of}`;
+    $('heroMove').textContent = pct(result.first_day);
+    $('heroPill').className = 'pill ' + (result.inside_band ? 'pos' : 'warn');
+    $('heroPill').innerHTML = result.inside_band ? 'inside the band' : 'outside the band';
+    $('heroBand').textContent = `First close $${result.first_close.toFixed(2)} against an offer of $${call ? call.offer.toFixed(2) : ''}. The model's published median was ${call ? pct(call.move) : '—'}, 80% band ${call ? pct(call.move_lo) + ' to ' + pct(call.move_hi) : '—'}.`;
+  } else if (call){
+    $('heroEyebrow').textContent = `Model first-day move · priced at $${call.offer.toFixed(2)}`;
+    $('heroMove').textContent = pct(call.move);
+    $('heroPill').innerHTML = `80% band <small>${pct(call.move_lo)} to ${pct(call.move_hi)}</small>`;
+    $('heroBand').textContent = `The call for the first trade on ${LR.first_trade}: median first close against the $${call.offer.toFixed(2)} offer, priced ${call.priced_vs_range === 'top' ? 'at the top of' : call.priced_vs_range} the filed $${base.low}–$${base.high} range, for a ${bn(call.deal_usd)} raise. It is scored after the first close.`;
+  } else {
+    $('heroMove').textContent = pct(ph.point/TOP-1);
+    $('heroPill').innerHTML = `80% band <small>${pct(ph.lo/TOP-1)} to ${pct(ph.hi/TOP-1)}</small>`;
+    $('heroBand').textContent = filed
+      ? `Median first close against the offer if ANT prices at the top of its filed $${base.low}–$${base.high} range, for a ${bn(dealAt(TOP))} raise. On pricing night the actual offer replaces the scenario.`
+      : `Median first close against the offer, for a ${bn(base.deal)} raise priced at the top of a placeholder $${base.low}–$${base.high} range. Today the S-1 has no range, so the gate withholds; this is the number it gives the moment one is filed.`;
+  }
+  if (LR){
+    const reg = LR.filing.registration || {};
+    const bits = [`${reg.form || 'S-1'} filed ${reg.date || '26 Oct 2026'}`];
+    bits.push(call ? `priced, first trade ${LR.first_trade}` : `expected first trade ${LR.first_trade}`);
+    bits.push(filed ? `range $${base.low}–$${base.high}` : 'range not yet filed');
+    $('heroSub').textContent = bits.join(' · ');
+  }
+  $('heroDeal').textContent = `${bn(dealAt(TOP))} raise`;
   $('stGate').innerHTML = ph.published ? '<span style="color:var(--pos)">Published</span>' : 'Withheld';
-  $('stRegime').textContent = `${M.regime.regime_n} IPOs · ${pct(Math.exp(M.regime.regime_first_day_median)-1)}`;
-  $('stMax').textContent = `${M.train_max_ranged_symbol} ${bn(M.train_max_ranged_deal)} · ANT ${Math.round(base.deal/M.train_max_ranged_deal)}×`;
+  $('stRegime').textContent = `${M.regime.regime_n} IPOs · ${pct(M.regime.regime_first_day_median)}`;
+  $('stMax').textContent = `${M.train_max_ranged_symbol} ${bn(M.train_max_ranged_deal)} · ANT ${Math.round(dealAt(TOP)/M.train_max_ranged_deal)}×`;
   $('stCheck').textContent = `${ok}/${M.vectors.length} match`;
 
   (function sweep(){
     const svg = $('sweep');
     const a = base.low * 0.85, b = base.high * 1.2, N = 120;
     const pts = [];
-    for (let i = 0; i <= N; i++){ const o = a + (b - a) * i / N; const p = price({...base, offer: o}); pts.push({o, m: p.point/o-1, lo: p.lo/o-1, hi: p.hi/o-1}); }
+    for (let i = 0; i <= N; i++){ const o = a + (b - a) * i / N; const p = price({...base, deal: dealAt(o), offer: o}); pts.push({o, m: p.point/o-1, lo: p.lo/o-1, hi: p.hi/o-1}); }
     const ys = pts.flatMap(p => [p.lo, p.hi]).concat([0]);
     let mn = Math.min(...ys), mx = Math.max(...ys); const pad = (mx-mn)*0.08; mn -= pad; mx += pad;
     const L = 56, R = 892, T = 10, B = 226;
@@ -412,27 +482,66 @@ body.nomodel .pending{display:block;padding:22px}
       s += `<line x1="${L}" x2="${R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${Math.abs(v) < 1e-9 ? 'var(--faint)' : 'var(--line)'}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${(v*100).toFixed(0)}%</text>`;
     }
     s += `<rect x="${X(base.low)}" y="${T}" width="${X(base.high)-X(base.low)}" height="${B-T}" fill="var(--tint)" stroke="var(--line)"/>`;
-    s += `<text x="${(X(base.low)+X(base.high))/2}" y="${T+18}" text-anchor="middle">filed range</text>`;
+    s += `<text x="${(X(base.low)+X(base.high))/2}" y="${T+18}" text-anchor="middle">${filed ? 'filed range' : 'placeholder range'}</text>`;
     s += `<path d="M${pts.map(p=>X(p.o).toFixed(1)+','+Y(p.hi).toFixed(1)).join('L')}L${pts.slice().reverse().map(p=>X(p.o).toFixed(1)+','+Y(p.lo).toFixed(1)).join('L')}Z" fill="url(#bg)"/>`;
     s += `<path d="M${pts.map(p=>X(p.o).toFixed(1)+','+Y(p.m).toFixed(1)).join('L')}" fill="none" stroke="var(--band)" stroke-width="2.5" stroke-linejoin="round"/>`;
     const labs = [[base.low*0.9,'below'],[(base.low+base.high)/2,'within'],[base.high*1.1,'above']];
     labs.forEach(([o,t]) => { s += `<text x="${X(o)}" y="${B+24}" text-anchor="middle">${t}</text>`; });
     s += `<text x="${X(base.low)}" y="${B+24}" text-anchor="middle">$${base.low}</text><text x="${X(base.high)}" y="${B+24}" text-anchor="middle">$${base.high}</text>`;
-    s += `<circle cx="${X(44)}" cy="${Y(ph.point/44-1)}" r="5" fill="var(--band)" stroke="var(--panel)" stroke-width="2"/>`;
-    s += `<text class="hl" x="${X(44)+10}" y="${Y(ph.point/44-1)-10}">${pct(ph.point/44-1)}</text>`;
+    s += `<circle cx="${X(TOP)}" cy="${Y(ph.point/TOP-1)}" r="5" fill="var(--band)" stroke="var(--panel)" stroke-width="2"/>`;
+    s += `<text class="hl" x="${X(TOP)+10}" y="${Y(ph.point/TOP-1)-10}">${pct(ph.point/TOP-1)}</text>`;
     svg.innerHTML = s;
   })();
 
-  $('hdDeal').textContent = bn(base.deal); $('hdRange').textContent = `$${base.low}–$${base.high}`;
+  $('hdDeal').textContent = bn(dealAt(TOP)); $('hdRange').textContent = `$${base.low}–$${base.high}`;
+  if (filed) $('hdRangeNote').textContent = 'These use the range filed on EDGAR,';
   {
-    const rows = [['10% above the range', 48.4], ['At the top of the range', 44], ['Mid-range', 42], ['8% below the range', 36.8]];
+    const r2 = v => Math.round(v * 100) / 100;
+    const rows = [['10% above the range', r2(TOP * 1.10)], ['At the top of the range', TOP],
+                  ['Mid-range', r2((base.low + base.high) / 2)], ['8% below the range', r2(base.low * 0.92)]];
     const tb = document.querySelector('#headline tbody');
     rows.forEach(([lab, o]) => {
-      const p = price({...base, offer: o});
-      tb.insertAdjacentHTML('beforeend', `<tr${o === 44 ? ' class="hl"' : ''}><td>${lab}</td><td>${pct(p.point/o-1)}</td><td>${pct(p.lo/o-1)} to ${pct(p.hi/o-1)}</td><td>${pill(p)}</td></tr>`);
+      const p = price({...base, deal: dealAt(o), offer: o});
+      tb.insertAdjacentHTML('beforeend', `<tr${o === TOP ? ' class="hl"' : ''}><td>${lab}</td><td>${pct(p.point/o-1)}</td><td>${pct(p.lo/o-1)} to ${pct(p.hi/o-1)}</td><td>${pill(p)}</td></tr>`);
     });
-    const p0 = price({...base, low: null, high: null, offer: 44});
-    tb.insertAdjacentHTML('beforeend', `<tr><td>No range filed (today)</td><td>${pct(p0.point/44-1)}</td><td>${pct(p0.lo/44-1)} to ${pct(p0.hi/44-1)}</td><td>${pill(p0)}</td></tr>`);
+    if (!filed){
+      const p0 = price({...base, deal: dealAt(TOP), low: null, high: null, offer: TOP});
+      tb.insertAdjacentHTML('beforeend', `<tr><td>No range filed (today)</td><td>${pct(p0.point/TOP-1)}</td><td>${pct(p0.lo/TOP-1)} to ${pct(p0.hi/TOP-1)}</td><td>${pill(p0)}</td></tr>`);
+    }
+  }
+
+  // ---- live tracker: stages, provenance, and every record
+  if (LR){
+    const REPO = 'https://github.com/henryzhangpku/ipo-price-model';
+    const order = ['filed_no_range', 'range_filed', 'priced', 'trading', 'scored'];
+    const at = order.indexOf(LR.stage);
+    const reg = LR.filing.registration || {}, pros = LR.filing.prospectus || {};
+    const firstSeen = st => { const h = L.history.find(x => order.indexOf(x.stage) >= order.indexOf(st)); return h ? h.as_of : null; };
+    const steps = [
+      ['S-1 filed', reg.date ? `${reg.date} · <a href="${reg.url}" target="_blank" rel="noopener">EDGAR</a>` : '26 Oct 2026'],
+      ['Range filed', filed ? `$${base.low}–$${base.high}` + (firstSeen('range_filed') ? ` · seen ${firstSeen('range_filed')}` : '') : 'waiting for the S-1/A'],
+      ['Priced', call ? `$${call.offer.toFixed(2)}` + (pros.url ? ` · <a href="${pros.url}" target="_blank" rel="noopener">424B</a>` : '') : 'pricing night'],
+      ['First trade', at >= 3 ? LR.first_trade : `expected ${LR.first_trade}`],
+      ['Scored', result ? (result.inside_band ? 'inside the band' : 'outside the band') : 'after the first close'],
+    ];
+    $('trkSteps').innerHTML = steps.map(([t, d], i) =>
+      `<li class="${i > at ? 'todo' : i === at && LR.stage !== 'scored' ? 'done now' : 'done'}"><b>${t}</b>${d}</li>`).join('');
+    const rs = LR.regime.status || {};
+    const ago = (Date.now() - Date.parse(LR.run_utc)) / 36e5;
+    $('trkMeta').innerHTML = [
+      `<span>Last checked <b>${LR.run_utc.replace('T', ' ').replace('Z', ' UTC')}</b>${ago < 48 ? '' : ' <span style="color:var(--warn)">(stale)</span>'}</span>`,
+      `<span>Record <b>#${LR.seq}</b> of ${L.history.length} · <a href="${REPO}/blob/main/tracker/tape.jsonl">daily record</a> · <a href="${REPO}/actions/workflows/track.yml">job runs</a></span>`,
+      `<span>Model fingerprint <code title="SHA-256 of docs/model.json">${LR.model_sha256.slice(0, 12)}</code> · frozen</span>`,
+      `<span>IPO data: ${rs.ok === false ? '<span style="color:var(--warn)">source unavailable, last values kept</span>' : 'Nasdaq calendar + first closes'}${(rs.added || []).length ? ' · added ' + rs.added.join(', ') : ''}</span>`,
+    ].join('');
+    const STAGE = {filed_no_range: 'S-1, no range', range_filed: 'Range filed', priced: 'Priced', trading: 'Trading', scored: 'Scored'};
+    const tbh = document.querySelector('#trkHist tbody');
+    L.history.slice().reverse().forEach(h => {
+      const band = h.call ? `${pct(h.call.move_lo)} to ${pct(h.call.move_hi)} <small>(priced)</small>` : h.top ? `${pct(h.top.move_lo)} to ${pct(h.top.move_hi)}` : '—';
+      const gate = h.call ? pill(h.call) : h.top ? (h.range_source === 'filed' ? pill(h.top) : '<span class="pill warn">withheld · no_range</span>') : '';
+      tbh.insertAdjacentHTML('beforeend', `<tr><td>${h.as_of}</td><td>${STAGE[h.stage] || h.stage}</td><td>${h.range_source === 'filed' ? '$' + h.range[0] + '–$' + h.range[1] : '<span style="color:var(--muted)">not filed</span>'}</td><td>${h.regime_n} · median ${pct(h.regime_median)}</td><td>${band}</td><td>${gate}</td></tr>`);
+    });
+    $('trkNote').textContent = `One row per change, newest first. Days when nothing changed add no row. While no range is filed the band is the placeholder scenario, and the gate withholds it.`;
   }
 
   // ---- calculator

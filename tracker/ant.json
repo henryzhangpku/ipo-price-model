@@ -1,0 +1,12 @@
+{
+  "symbol": "ANT",
+  "company": "Anthropic, PBC",
+  "cik": "2130357",
+  "exchange": "NASDAQ Global Select",
+  "expected_first_trade": "2026-11-16",
+  "first_trade_source": "press reports of a listing the week of 16 November; replaced by the 424B prospectus date once filed",
+  "assumed_deal_usd": 60000000000,
+  "assumed_deal_source": "press reports of a $60-100B raise (low end); replaced by filed shares x offer once the cover states a share count",
+  "placeholder_range": [40.0, 44.0],
+  "placeholder_note": "used only until a range is filed; scenarios are moves from the offer, so the placeholder level shifts them only through log_offer"
+}

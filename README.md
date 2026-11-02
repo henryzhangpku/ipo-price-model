@@ -39,6 +39,29 @@ band. The same deal with no filed range is withheld. An $8M micro-cap gets a
 band too wide to be useful, and the gate says so instead of printing a
 midpoint.
 
+## Live: ANT, tracked to its first trade
+
+The demo follows Anthropic's listing (Nasdaq: ANT) from the S-1 to the first
+close. A scheduled GitHub Action (`.github/workflows/track.yml`, weekday
+mornings and pricing nights) runs the tests, then `ipo-price-model track`:
+
+- reads Anthropic's latest registration cover and any final prospectus on EDGAR
+  (the filed range, the shares offered, the offer price);
+- updates the 90-day regime with newly priced listings from the public Nasdaq
+  IPO calendar and their first closes, using the training cohort's own rules;
+- prices the deal with the **frozen** model in `docs/model.json` (its SHA-256 is
+  in every record; the model is never refitted during the test);
+- after the first trade, scores the band published before it: inside or outside.
+
+Every change is appended to [`tracker/tape.jsonl`](tracker/tape.jsonl) and
+committed. A record is never edited, so a later one supersedes it, and the
+commit history is the audit trail. The page reads `docs/live.json`.
+
+```bash
+ipo-price-model track --deal tracker/ant.json            # what the job runs
+ipo-price-model track --deal tracker/ant.json --offline  # no network: committed files only
+```
+
 ## Results
 
 Second full run, 1 November 2026, on listings through 14 November 2026.
@@ -126,7 +149,7 @@ ipo-price-model ranges                 # EDGAR; set SEC_USER_AGENT to your own c
 ipo-price-model labels                 # throttled and resumable; re-run if rate-limited
 ipo-price-model evaluate               # train ≤2022, calibrate 2023, test 2024→
 ipo-price-model price --date 2026-10-14 --offer 21 --low 18 --high 20 --deal 450e6
-pytest -q                              # 17 tests, no network, no keys
+pytest -q                              # 28 tests, no network, no keys
 ```
 
 ## What the tests pin down

@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install
+        run: uv sync --frozen --extra dev
+      - name: Tests
+        run: uv run pytest -q
+      - name: The tracker runs offline on the committed files
+        run: uv run ipo-price-model track --deal tracker/ant.json --offline --as-of 2026-11-02 && git checkout -- tracker docs

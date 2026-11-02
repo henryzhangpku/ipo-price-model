@@ -1,4 +1,4 @@
-"""cli.py — `ipo-price-model universe | ranges | labels | evaluate | price`."""
+"""cli.py — `ipo-price-model universe | ranges | labels | evaluate | price | track`."""
 from __future__ import annotations
 
 import argparse
@@ -83,6 +83,16 @@ def _price(a) -> None:
         print(f"withheld: {out['reason']}: the interval above is shown for audit, not for use")
 
 
+def _track(a) -> None:
+    from pathlib import Path
+    from .tracker import track
+    rec, changed = track(Path(a.deal), today=pd.Timestamp(a.as_of) if a.as_of else None, offline=a.offline)
+    print(rec["headline"])
+    print(f"stage {rec['stage']} | regime n={rec['regime']['n']} ({rec['regime']['status'].get('source')}, "
+          f"ok={rec['regime']['status'].get('ok')}) | filing error: {rec['filing'].get('error')}")
+    print("tape: appended record" if changed else "tape: unchanged since the last record")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(prog="ipo-price-model", description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -113,6 +123,11 @@ def main() -> None:
     p.add_argument("--train-end", default="2023-12-31")
     p.add_argument("--alpha", type=float, default=0.20)
     p.set_defaults(fn=_price)
+    t = sub.add_parser("track", help="follow one listing to its first trade with the frozen model; append to the tape")
+    t.add_argument("--deal", default="tracker/ant.json")
+    t.add_argument("--as-of", default=None, help="YYYY-MM-DD; defaults to today (UTC)")
+    t.add_argument("--offline", action="store_true", help="no network: placeholders and the committed listings only")
+    t.set_defaults(fn=_track)
     a = ap.parse_args()
     a.fn(a)
 

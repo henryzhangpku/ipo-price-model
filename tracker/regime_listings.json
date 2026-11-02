@@ -1,0 +1,466 @@
+{
+ "note": "Listings with a first close since 2026-06-01, from the frozen universe and labels (data/ on the research box). The daily tracker adds listings priced after frozen_through from the Nasdaq calendar.",
+ "frozen_through": "2026-10-23",
+ "listings": [
+  {
+   "symbol": "LFTO",
+   "name": "Liftoff Mobile, Inc.",
+   "ipo_date": "2026-06-04",
+   "first_close_date": "2026-06-04",
+   "offer": 23.0,
+   "first_close": 28.45,
+   "first_day": 0.236957,
+   "source": "frozen"
+  },
+  {
+   "symbol": "QNT",
+   "name": "Quantinuum Inc.",
+   "ipo_date": "2026-06-04",
+   "first_close_date": "2026-06-04",
+   "offer": 60.0,
+   "first_close": 60.38,
+   "first_day": 0.006333,
+   "source": "frozen"
+  },
+  {
+   "symbol": "INIO",
+   "name": "INNIO N.V.",
+   "ipo_date": "2026-06-04",
+   "first_close_date": "2026-06-08",
+   "offer": 27.0,
+   "first_close": 33.72,
+   "first_day": 0.248889,
+   "source": "frozen"
+  },
+  {
+   "symbol": "ELOX",
+   "name": "Eloxx Pharmaceuticals, Inc.",
+   "ipo_date": "2026-06-09",
+   "first_close_date": "2026-06-09",
+   "offer": 11.0,
+   "first_close": 11.01,
+   "first_day": 0.000909,
+   "source": "frozen"
+  },
+  {
+   "symbol": "WHK",
+   "name": "WhiteHawk Minerals Corp.",
+   "ipo_date": "2026-06-09",
+   "first_close_date": "2026-06-09",
+   "offer": 26.0,
+   "first_close": 26.0,
+   "first_day": 0.0,
+   "source": "frozen"
+  },
+  {
+   "symbol": "EROC",
+   "name": "ERock, Inc.",
+   "ipo_date": "2026-06-10",
+   "first_close_date": "2026-06-10",
+   "offer": 21.5,
+   "first_close": 18.75,
+   "first_day": -0.127907,
+   "source": "frozen"
+  },
+  {
+   "symbol": "PBLS",
+   "name": "Parabilis Medicines, Inc.",
+   "ipo_date": "2026-06-10",
+   "first_close_date": "2026-06-10",
+   "offer": 20.0,
+   "first_close": 31.6,
+   "first_day": 0.58,
+   "source": "frozen"
+  },
+  {
+   "symbol": "FRBT",
+   "name": "Forbright, Inc.",
+   "ipo_date": "2026-06-11",
+   "first_close_date": "2026-06-11",
+   "offer": 18.0,
+   "first_close": 18.1,
+   "first_day": 0.005556,
+   "source": "frozen"
+  },
+  {
+   "symbol": "CAES",
+   "name": "Cantor Equity Partners VII, Inc.",
+   "ipo_date": "2026-06-17",
+   "first_close_date": "2026-06-17",
+   "offer": 10.0,
+   "first_close": 10.11,
+   "first_day": 0.011,
+   "source": "frozen"
+  },
+  {
+   "symbol": "KARD",
+   "name": "Kardigan, Inc.",
+   "ipo_date": "2026-06-18",
+   "first_close_date": "2026-06-18",
+   "offer": 16.0,
+   "first_close": 22.0,
+   "first_day": 0.375,
+   "source": "frozen"
+  },
+  {
+   "symbol": "FISN",
+   "name": "DEEP FISSION, INC.",
+   "ipo_date": "2026-06-18",
+   "first_close_date": "2026-06-18",
+   "offer": 16.0,
+   "first_close": 14.56,
+   "first_day": -0.09,
+   "source": "frozen"
+  },
+  {
+   "symbol": "FCBM",
+   "name": "First Carolina Financial Services, Inc.",
+   "ipo_date": "2026-06-18",
+   "first_close_date": "2026-06-18",
+   "offer": 12.5,
+   "first_close": 12.6,
+   "first_day": 0.008,
+   "source": "frozen"
+  },
+  {
+   "symbol": "DPC",
+   "name": "DPC Holdings Ltd",
+   "ipo_date": "2026-06-25",
+   "first_close_date": "2026-06-25",
+   "offer": 33.0,
+   "first_close": 46.88,
+   "first_day": 0.420606,
+   "source": "frozen"
+  },
+  {
+   "symbol": "DSC",
+   "name": "DSC Holdings Ltd.",
+   "ipo_date": "2026-06-25",
+   "first_close_date": "2026-06-25",
+   "offer": 17.0,
+   "first_close": 9.06,
+   "first_day": -0.467059,
+   "source": "frozen"
+  },
+  {
+   "symbol": "SIND",
+   "name": "Sinda Ltd.",
+   "ipo_date": "2026-06-26",
+   "first_close_date": "2026-06-26",
+   "offer": 12.0,
+   "first_close": 12.0,
+   "first_day": 0.0,
+   "source": "frozen"
+  },
+  {
+   "symbol": "BSP",
+   "name": "Bending Spoons S.p.A.",
+   "ipo_date": "2026-07-01",
+   "first_close_date": "2026-07-01",
+   "offer": 29.0,
+   "first_close": 40.5,
+   "first_day": 0.396552,
+   "source": "frozen"
+  },
+  {
+   "symbol": "ITG",
+   "name": "ITG, Inc./DE/",
+   "ipo_date": "2026-07-01",
+   "first_close_date": "2026-07-01",
+   "offer": 16.0,
+   "first_close": 17.71,
+   "first_day": 0.106875,
+   "source": "frozen"
+  },
+  {
+   "symbol": "LIME",
+   "name": "Neutron Holdings, Inc.",
+   "ipo_date": "2026-07-01",
+   "first_close_date": "2026-07-01",
+   "offer": 25.0,
+   "first_close": 26.0,
+   "first_day": 0.04,
+   "source": "frozen"
+  },
+  {
+   "symbol": "SKHY",
+   "name": "SK hynix Inc.",
+   "ipo_date": "2026-07-10",
+   "first_close_date": "2026-07-10",
+   "offer": 149.0,
+   "first_close": 168.01,
+   "first_day": 0.127584,
+   "source": "frozen"
+  },
+  {
+   "symbol": "RACD",
+   "name": "Research Alliance Corp IV",
+   "ipo_date": "2026-07-13",
+   "first_close_date": "2026-07-13",
+   "offer": 10.0,
+   "first_close": 10.34,
+   "first_day": 0.034,
+   "source": "frozen"
+  },
+  {
+   "symbol": "STDN",
+   "name": "Standard Nuclear, Inc.",
+   "ipo_date": "2026-07-16",
+   "first_close_date": "2026-07-16",
+   "offer": 15.0,
+   "first_close": 12.3,
+   "first_day": -0.18,
+   "source": "frozen"
+  },
+  {
+   "symbol": "SCTX",
+   "name": "Scribe Therapeutics, Inc.",
+   "ipo_date": "2026-07-24",
+   "first_close_date": "2026-07-27",
+   "offer": 15.0,
+   "first_close": 18.97,
+   "first_day": 0.264667,
+   "source": "frozen"
+  },
+  {
+   "symbol": "IMC",
+   "name": "IMC Rare Earths Ltd",
+   "ipo_date": "2026-07-29",
+   "first_close_date": "2026-07-29",
+   "offer": 5.0,
+   "first_close": 5.13,
+   "first_day": 0.026,
+   "source": "frozen"
+  },
+  {
+   "symbol": "JMKE",
+   "name": "Jersey Mike's Subs Inc.",
+   "ipo_date": "2026-07-30",
+   "first_close_date": "2026-07-30",
+   "offer": 23.0,
+   "first_close": 21.63,
+   "first_day": -0.059565,
+   "source": "frozen"
+  },
+  {
+   "symbol": "REF",
+   "name": "Reformation Inc.",
+   "ipo_date": "2026-07-30",
+   "first_close_date": "2026-07-30",
+   "offer": 15.0,
+   "first_close": 15.08,
+   "first_day": 0.005333,
+   "source": "frozen"
+  },
+  {
+   "symbol": "APMD",
+   "name": "Apnimed, Inc.",
+   "ipo_date": "2026-07-31",
+   "first_close_date": "2026-07-31",
+   "offer": 16.0,
+   "first_close": 25.0,
+   "first_day": 0.5625,
+   "source": "frozen"
+  },
+  {
+   "symbol": "ATTO",
+   "name": "Attovia Therapeutics, Inc.",
+   "ipo_date": "2026-08-05",
+   "first_close_date": "2026-08-05",
+   "offer": 17.0,
+   "first_close": 21.9,
+   "first_day": 0.288235,
+   "source": "frozen"
+  },
+  {
+   "symbol": "BRVE",
+   "name": "Braveheart Bio, Inc.",
+   "ipo_date": "2026-08-06",
+   "first_close_date": "2026-08-06",
+   "offer": 18.0,
+   "first_close": 29.8,
+   "first_day": 0.655556,
+   "source": "frozen"
+  },
+  {
+   "symbol": "BLSM",
+   "name": "BlossomHill Therapeutics, Inc.",
+   "ipo_date": "2026-08-07",
+   "first_close_date": "2026-08-07",
+   "offer": 16.0,
+   "first_close": 16.0,
+   "first_day": 0.0,
+   "source": "frozen"
+  },
+  {
+   "symbol": "LTGO",
+   "name": "Latigo Biotherapeutics, Inc.",
+   "ipo_date": "2026-08-07",
+   "first_close_date": "2026-08-07",
+   "offer": 18.0,
+   "first_close": 18.25,
+   "first_day": 0.013889,
+   "source": "frozen"
+  },
+  {
+   "symbol": "TP",
+   "name": "Ticketplus Ltd.",
+   "ipo_date": "2026-08-07",
+   "first_close_date": "2026-08-07",
+   "offer": 8.0,
+   "first_close": 7.0,
+   "first_day": -0.125,
+   "source": "frozen"
+  },
+  {
+   "symbol": "FOIL",
+   "name": "Londian Wason New Energy Tech Inc.",
+   "ipo_date": "2026-08-12",
+   "first_close_date": "2026-08-12",
+   "offer": 22.0,
+   "first_close": 24.5,
+   "first_day": 0.113636,
+   "source": "frozen"
+  },
+  {
+   "symbol": "SNSC",
+   "name": "SunScout Holding Ltd",
+   "ipo_date": "2026-08-12",
+   "first_close_date": "2026-08-12",
+   "offer": 5.0,
+   "first_close": 3.07,
+   "first_day": -0.386,
+   "source": "frozen"
+  },
+  {
+   "symbol": "VOGX",
+   "name": "Vogenx, Inc.",
+   "ipo_date": "2026-08-12",
+   "first_close_date": "2026-08-12",
+   "offer": 13.0,
+   "first_close": 13.0,
+   "first_day": 0.0,
+   "source": "frozen"
+  },
+  {
+   "symbol": "LYNX",
+   "name": "Lyntris Inc.",
+   "ipo_date": "2026-08-19",
+   "first_close_date": "2026-08-19",
+   "offer": 17.5,
+   "first_close": 15.01,
+   "first_day": -0.142286,
+   "source": "frozen"
+  },
+  {
+   "symbol": "ETRA",
+   "name": "Electra Therapeutics, Inc.",
+   "ipo_date": "2026-09-18",
+   "first_close_date": "2026-09-18",
+   "offer": 15.0,
+   "first_close": 13.25,
+   "first_day": -0.116667,
+   "source": "frozen"
+  },
+  {
+   "symbol": "OIG",
+   "name": "Orion180 Insurance Group Inc.",
+   "ipo_date": "2026-09-18",
+   "first_close_date": "2026-09-18",
+   "offer": 12.0,
+   "first_close": 11.66,
+   "first_day": -0.028333,
+   "source": "frozen"
+  },
+  {
+   "symbol": "ADRX",
+   "name": "ADARx Pharmaceuticals, Inc.",
+   "ipo_date": "2026-09-25",
+   "first_close_date": "2026-09-25",
+   "offer": 17.0,
+   "first_close": 19.35,
+   "first_day": 0.138235,
+   "source": "frozen"
+  },
+  {
+   "symbol": "CHWM",
+   "name": "Chilwa Minerals Ltd",
+   "ipo_date": "2026-10-01",
+   "first_close_date": "2026-10-01",
+   "offer": 5.6,
+   "first_close": 6.6,
+   "first_day": 0.178571,
+   "source": "frozen"
+  },
+  {
+   "symbol": "ACCV",
+   "name": "Accelevation Holdings Corp.",
+   "ipo_date": "2026-09-30",
+   "first_close_date": "2026-10-06",
+   "offer": 18.0,
+   "first_close": 16.4,
+   "first_day": -0.088889,
+   "source": "frozen"
+  },
+  {
+   "symbol": "RTSN",
+   "name": "Retension Pharmaceuticals, Inc.",
+   "ipo_date": "2026-10-09",
+   "first_close_date": "2026-10-09",
+   "offer": 12.0,
+   "first_close": 10.53,
+   "first_day": -0.1225,
+   "source": "frozen"
+  },
+  {
+   "symbol": "TRXB",
+   "name": "TRex Bio, Inc.",
+   "ipo_date": "2026-10-09",
+   "first_close_date": "2026-10-09",
+   "offer": 14.0,
+   "first_close": 14.0,
+   "first_day": 0.0,
+   "source": "frozen"
+  },
+  {
+   "symbol": "AMRO",
+   "name": "Amaero Inc.",
+   "ipo_date": "2026-10-15",
+   "first_close_date": "2026-10-15",
+   "offer": 4.25,
+   "first_close": 4.41,
+   "first_day": 0.037647,
+   "source": "frozen"
+  },
+  {
+   "symbol": "IAM",
+   "name": "Iambic Therapeutics, Inc.",
+   "ipo_date": "2026-10-15",
+   "first_close_date": "2026-10-15",
+   "offer": 16.0,
+   "first_close": 18.91,
+   "first_day": 0.181875,
+   "source": "frozen"
+  },
+  {
+   "symbol": "CTY",
+   "name": "CITY THERAPEUTICS, INC.",
+   "ipo_date": "2026-10-16",
+   "first_close_date": "2026-10-16",
+   "offer": 18.0,
+   "first_close": 22.4,
+   "first_day": 0.244444,
+   "source": "frozen"
+  },
+  {
+   "symbol": "LYCA",
+   "name": "Lycia Therapeutics, Inc.",
+   "ipo_date": "2026-10-23",
+   "first_close_date": "2026-10-23",
+   "offer": 18.0,
+   "first_close": 30.0,
+   "first_day": 0.666667,
+   "source": "frozen"
+  }
+ ]
+}

@@ -1,0 +1,62 @@
+name: ANT tracker
+
+# Follows the listing to its first trade with the frozen model in docs/model.json
+# and commits one record per change to tracker/tape.jsonl, the page's feed.
+#
+# The model is never refitted here: its SHA-256 is in every record. Only the T-1
+# inputs move: the issuer's EDGAR filings, recent listings' first-day moves, and,
+# after the first trade, the first close that scores the published band.
+
+on:
+  schedule:
+    # 13:35 UTC (09:35 New York), after the morning's EDGAR filings and the open.
+    - cron: "35 13 * * 1-5"
+    # 02:35 UTC (21:35/22:35 New York), after a deal prices in the evening.
+    - cron: "35 2 * * 2-6"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # Two runs must never append to the tape at once.
+  group: ant-tracker
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SEC_USER_AGENT: "ipo-price-model research henryzhangpku@users.noreply.github.com"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --frozen --extra dev
+
+      - name: Tests
+        # A change that breaks its own claims must not reach the tape.
+        run: uv run pytest -q
+
+      - name: Track
+        id: track
+        run: |
+          uv run ipo-price-model track --deal tracker/ant.json | tee track.log
+          echo "headline=$(head -1 track.log)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit the record
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tracker/tape.jsonl tracker/regime_listings.json docs/live.json
+          if git diff --cached --quiet; then
+            echo "No change since the last record."
+            exit 0
+          fi
+          git commit -m "ANT tracker $(date -u +%F): ${{ steps.track.outputs.headline }}"
+          git push
