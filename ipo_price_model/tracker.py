@@ -447,6 +447,20 @@ def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = Fa
     return rec, changed
 
 
+def _note(r: dict) -> str | None:
+    """What a reader needs to know about a record beyond its numbers. Pure."""
+    notes = []
+    f = r.get("filing") or {}
+    if f.get("error"):
+        notes.append("EDGAR read failed; last filing kept" if f.get("carried_forward") else "EDGAR read failed")
+    st = (r.get("regime") or {}).get("status") or {}
+    if st.get("ok") is False:
+        notes.append("IPO calendar unavailable; regime kept")
+    if st.get("added"):
+        notes.append("new listings: " + ", ".join(st["added"]))
+    return "; ".join(notes) or None
+
+
 def write_live(deal: dict, path: Path | None = None) -> None:
     path = path or LIVE_JSON
     tape = read_tape()
@@ -455,6 +469,6 @@ def write_live(deal: dict, path: Path | None = None) -> None:
              "regime_median": r["regime"]["median"],
              "top": next(({k: s[k] for k in ("move", "move_lo", "move_hi", "published", "reason")}
                           for s in r["scenarios"] if s["key"] == "top"), None),
-             "call": r.get("call"), "result": r.get("result")} for r in tape]
+             "call": r.get("call"), "result": r.get("result"), "note": _note(r)} for r in tape]
     path.write_text(json.dumps({"deal": deal, "latest": tape[-1] if tape else None, "history": hist},
                                separators=(",", ":")) + "\n")

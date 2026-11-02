@@ -539,7 +539,7 @@ body.nomodel .pending{display:block;padding:22px}
     L.history.slice().reverse().forEach(h => {
       const band = h.call ? `${pct(h.call.move_lo)} to ${pct(h.call.move_hi)} <small>(priced)</small>` : h.top ? `${pct(h.top.move_lo)} to ${pct(h.top.move_hi)}` : '—';
       const gate = h.call ? pill(h.call) : h.top ? (h.range_source === 'filed' ? pill(h.top) : '<span class="pill warn">withheld · no_range</span>') : '';
-      tbh.insertAdjacentHTML('beforeend', `<tr><td>${h.as_of}</td><td>${STAGE[h.stage] || h.stage}</td><td>${h.range_source === 'filed' ? '$' + h.range[0] + '–$' + h.range[1] : '<span style="color:var(--muted)">not filed</span>'}</td><td>${h.regime_n} · median ${pct(h.regime_median)}</td><td>${band}</td><td>${gate}</td></tr>`);
+      tbh.insertAdjacentHTML('beforeend', `<tr><td>${h.as_of}<br><small style="color:var(--faint)">#${h.seq}</small></td><td>${STAGE[h.stage] || h.stage}${h.note ? `<br><small style="color:var(--warn)">${h.note}</small>` : ''}</td><td>${h.range_source === 'filed' ? '$' + h.range[0] + '–$' + h.range[1] : '<span style="color:var(--muted)">not filed</span>'}</td><td>${h.regime_n} · median ${pct(h.regime_median)}</td><td>${band}</td><td>${gate}</td></tr>`);
     });
     $('trkNote').textContent = `One row per change, newest first. Days when nothing changed add no row. While no range is filed the band is the placeholder scenario, and the gate withholds it.`;
   }
