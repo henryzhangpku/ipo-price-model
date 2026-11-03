@@ -481,6 +481,16 @@
    "first_close": 14.99,
    "first_day": -0.063125,
    "source": "nasdaq+yfinance"
+  },
+  {
+   "symbol": "NARA",
+   "name": "Narragansett Bancorp, Inc.",
+   "ipo_date": "2026-11-02",
+   "first_close_date": "2026-11-02",
+   "offer": 10.0,
+   "first_close": 10.8,
+   "first_day": 0.08,
+   "source": "nasdaq+yfinance"
   }
  ]
 }
