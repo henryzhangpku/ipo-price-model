@@ -394,6 +394,24 @@ def headline(rec: dict) -> str:
     return f"{sym} no range filed; regime {rec['regime']['n']} listings, median {rec['regime']['median']:+.1%}"
 
 
+def alerts(rec: dict, today: pd.Timestamp) -> list[str]:
+    """What would make the test end unscored without anyone noticing. Pure; an empty list is healthy."""
+    if rec["stage"] == "scored":
+        return []
+    out = []
+    pros = (rec.get("filing") or {}).get("prospectus") or {}
+    first_trade = pd.Timestamp(rec["first_trade"])
+    if pros.get("date") and not pros.get("offer"):
+        out.append(f"final prospectus {pros.get('form')} filed {pros['date']} but no offer price was read: "
+                   f"there is no call to score ({pros.get('url', '')})")
+    if today > first_trade and not pros.get("date"):
+        out.append(f"the expected first trade {rec['first_trade']} has passed with no final prospectus on EDGAR: "
+                   "the deal moved or the filing was missed; update expected_first_trade in the deal file")
+    if rec.get("call") and today > first_trade + pd.offsets.BDay(1):
+        out.append(f"first trade was {rec['first_trade']} and the first close has not been read yet")
+    return out
+
+
 def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = False) -> tuple[dict, bool]:
     deal = json.loads(deal_path.read_text())
     model = FrozenModel.load()

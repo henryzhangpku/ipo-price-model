@@ -123,3 +123,26 @@ def test_an_edgar_outage_carries_the_last_filing_forward(tmp_path, monkeypatch):
     rec, _ = T.track(T.TRACKER_DIR / "ant.json", today=pd.Timestamp("2026-11-10"))
     assert rec["stage"] == "range_filed" and rec["range"] == [30.0, 33.0]
     assert rec["filing"]["carried_forward"] and "EDGAR unreachable" in rec["filing"]["error"]
+
+
+def _rec(stage, first_trade="2026-11-16", prospectus=None, call=None):
+    return {"stage": stage, "first_trade": first_trade, "call": call,
+            "filing": {"registration": {"low": 40.0}, "prospectus": prospectus}}
+
+
+def test_alerts_stay_quiet_on_the_normal_path():
+    assert T.alerts(_rec("range_filed"), pd.Timestamp("2026-11-10")) == []
+    assert T.alerts(_rec("priced", prospectus={"form": "424B4", "date": "2026-11-16", "offer": 44.0},
+                         call={"offer": 44.0}), pd.Timestamp("2026-11-17")) == []
+    assert T.alerts(_rec("scored", prospectus={"date": "2026-11-16"}), pd.Timestamp("2026-12-30")) == []
+
+
+def test_alerts_catch_a_test_that_can_no_longer_be_scored():
+    unread = T.alerts(_rec("range_filed", prospectus={"form": "424B4", "date": "2026-11-16", "offer": None}),
+                      pd.Timestamp("2026-11-16"))
+    assert len(unread) == 1 and "no offer price" in unread[0]
+    slipped = T.alerts(_rec("range_filed"), pd.Timestamp("2026-11-17"))
+    assert len(slipped) == 1 and "no final prospectus" in slipped[0]
+    no_close = T.alerts(_rec("trading", prospectus={"date": "2026-11-16", "offer": 44.0}, call={"offer": 44.0}),
+                        pd.Timestamp("2026-11-18"))
+    assert len(no_close) == 1 and "first close" in no_close[0]

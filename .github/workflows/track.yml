@@ -32,24 +32,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Done already?
+        # Once the band is scored the test is over: every later run stops here.
+        id: done
+        run: |
+          stage=$(tail -1 tracker/tape.jsonl | python3 -c 'import json,sys; print(json.load(sys.stdin)["stage"])')
+          echo "stage=$stage" >> "$GITHUB_OUTPUT"
+          if [ "$stage" = scored ]; then echo "::notice::The record is scored; nothing left to track."; fi
+
       - uses: astral-sh/setup-uv@v5
+        if: steps.done.outputs.stage != 'scored'
         with:
           enable-cache: true
 
       - name: Install
+        if: steps.done.outputs.stage != 'scored'
         run: uv sync --frozen --extra dev
 
       - name: Tests
         # A change that breaks its own claims must not reach the tape.
+        if: steps.done.outputs.stage != 'scored'
         run: uv run pytest -q
 
       - name: Track
+        if: steps.done.outputs.stage != 'scored'
         id: track
         run: |
           uv run ipo-price-model track --deal tracker/ant.json | tee track.log
           echo "headline=$(head -1 track.log)" >> "$GITHUB_OUTPUT"
 
       - name: Commit the record
+        if: steps.done.outputs.stage != 'scored'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -60,3 +73,9 @@ jobs:
           fi
           git commit -m "ANT tracker $(date -u +%F): ${{ steps.track.outputs.headline }}"
           git push
+
+      - name: Check the test can still be scored
+        # After the commit, so the record is kept either way. A failed run emails the repo owner:
+        # a prospectus with no price read, a first-trade date gone by with no prospectus, or no first close.
+        if: steps.done.outputs.stage != 'scored'
+        run: uv run ipo-price-model check

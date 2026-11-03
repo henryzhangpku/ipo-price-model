@@ -38,7 +38,11 @@ Every change is appended to [`tracker/tape.jsonl`](tracker/tape.jsonl) and
 committed by the job. A record is never edited (a later one supersedes it), each
 says what went wrong if anything did, and the commit history is the audit trail.
 An outage never moves the record backwards: a failed EDGAR read keeps the last
-filing and says so.
+filing and says so. After each run, `ipo-price-model check` fails the job, so
+the failure is visible, if the test could end unscored: a final prospectus whose
+price wasn't read, a first-trade date gone by with no prospectus, or a first
+close not read a day later. Once the band is scored, the job stops at its first
+step.
 
 ```bash
 ipo-price-model track --deal tracker/ant.json            # what the job runs
@@ -169,7 +173,7 @@ uv run ipo-price-model labels          # throttled and resumable; re-run if rate
 uv run ipo-price-model evaluate        # train ≤2022, calibrate 2023, test 2024→
 uv run ipo-price-model price --date 2026-10-14 --offer 21 --low 18 --high 20 --deal 450e6
 uv run python docs/export_model.py --date 2026-11-16   # refit and export the demo's model
-uv run pytest -q                       # 29 tests, no network, no keys
+uv run pytest -q                       # 31 tests, no network, no keys
 ```
 
 ## What the tests pin down

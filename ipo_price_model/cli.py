@@ -93,6 +93,21 @@ def _track(a) -> None:
     print("tape: appended record" if changed else "tape: unchanged since the last record")
 
 
+def _check(a) -> None:
+    import sys
+    from .tracker import alerts, read_tape
+    tape = read_tape()
+    if not tape:
+        sys.exit("check: the tape is empty")
+    rec = tape[-1]
+    found = alerts(rec, pd.Timestamp(a.as_of) if a.as_of else pd.Timestamp.now(tz="UTC").tz_localize(None).normalize())
+    for x in found:
+        print(f"ALERT: {x}")
+    if found:
+        sys.exit(1)
+    print(f"check: record #{rec['seq']} ({rec['stage']}) is healthy")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(prog="ipo-price-model", description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -128,6 +143,9 @@ def main() -> None:
     t.add_argument("--as-of", default=None, help="YYYY-MM-DD; defaults to today (UTC)")
     t.add_argument("--offline", action="store_true", help="no network: placeholders and the committed listings only")
     t.set_defaults(fn=_track)
+    c = sub.add_parser("check", help="fail if the latest record can no longer end in a score")
+    c.add_argument("--as-of", default=None, help="YYYY-MM-DD; defaults to today (UTC)")
+    c.set_defaults(fn=_check)
     a = ap.parse_args()
     a.fn(a)
 
