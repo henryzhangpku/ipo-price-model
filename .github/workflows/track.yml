@@ -63,6 +63,9 @@ jobs:
 
       - name: Commit the record
         if: steps.done.outputs.stage != 'scored'
+        env:
+          # Through the environment, not inlined into the script: "$70" in a headline would expand as $7 + "0".
+          HEADLINE: ${{ steps.track.outputs.headline }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -71,7 +74,7 @@ jobs:
             echo "No change since the last record."
             exit 0
           fi
-          git commit -m "ANT tracker $(date -u +%F): ${{ steps.track.outputs.headline }}"
+          git commit -m "ANT tracker $(date -u +%F): $HEADLINE"
           git push
 
       - name: Check the test can still be scored
