@@ -491,6 +491,36 @@
    "first_close": 10.8,
    "first_day": 0.08,
    "source": "nasdaq+yfinance"
+  },
+  {
+   "symbol": "MDRN",
+   "name": "Modern Mining Technology Corp.",
+   "ipo_date": "2026-11-13",
+   "first_close_date": "2026-11-13",
+   "offer": 4.25,
+   "first_close": 4.1,
+   "first_day": -0.035294,
+   "source": "nasdaq+yfinance"
+  },
+  {
+   "symbol": "VVVV",
+   "name": "vVARDIS Holding AG",
+   "ipo_date": "2026-11-13",
+   "first_close_date": "2026-11-13",
+   "offer": 18.0,
+   "first_close": 16.5,
+   "first_day": -0.083333,
+   "source": "nasdaq+yfinance"
+  },
+  {
+   "symbol": "WWB",
+   "name": "WINDWARD BIO GROUP AG",
+   "ipo_date": "2026-11-13",
+   "first_close_date": "2026-11-13",
+   "offer": 17.0,
+   "first_close": 28.5,
+   "first_day": 0.676471,
+   "source": "nasdaq+yfinance"
   }
  ]
 }
