@@ -444,12 +444,19 @@ def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = Fa
 
     numbers = make_call(model, deal, filing, regime)
     result = None
-    published_call = next((r["call"] for r in reversed(tape) if r.get("call") and r["as_of"] < str(first_trade.date())), None)
+    # "Before the first trade" is by run time against the 09:30 ET open, not by the record's UTC date: the pricing-night
+    # run (evening ET) is dated the next UTC day, so a date comparison skipped the real call (ANT, 2026-11-19).
+    opened = pd.Timestamp(first_trade.date()).tz_localize("America/New_York") + pd.Timedelta(hours=9, minutes=30)
+    def _before_open(r: dict) -> bool:
+        ts = r.get("run_utc")
+        return pd.Timestamp(ts).tz_localize("UTC") < opened.tz_convert("UTC") if ts else r["as_of"] < str(first_trade.date())
+    published_call = next((r["call"] for r in reversed(tape) if r.get("call") and _before_open(r)), None)
     if published_call and today >= first_trade and not offline:
         fc = first_close(deal["symbol"], first_trade)
         if fc:
             result = {"first_close_date": fc["date"], **score(published_call, fc["close"]),
-                      "band_published_as_of": next(r["as_of"] for r in reversed(tape) if r.get("call") == published_call)}
+                      "band_published_as_of": next(r["as_of"] for r in reversed(tape) if r.get("call") == published_call),
+                      "band_published_run_utc": next(r.get("run_utc") for r in reversed(tape) if r.get("call") == published_call)}
 
     rec = {
         "as_of": str(today.date()), "run_utc": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
