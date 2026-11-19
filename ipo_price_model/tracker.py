@@ -449,7 +449,11 @@ def track(deal_path: Path, today: pd.Timestamp | None = None, offline: bool = Fa
     opened = pd.Timestamp(first_trade.date()).tz_localize("America/New_York") + pd.Timedelta(hours=9, minutes=30)
     def _before_open(r: dict) -> bool:
         ts = r.get("run_utc")
-        return pd.Timestamp(ts).tz_localize("UTC") < opened.tz_convert("UTC") if ts else r["as_of"] < str(first_trade.date())
+        if not ts:
+            return r["as_of"] < str(first_trade.date())
+        t = pd.Timestamp(ts)
+        t = t.tz_localize("UTC") if t.tzinfo is None else t.tz_convert("UTC")
+        return t < opened.tz_convert("UTC")
     published_call = next((r["call"] for r in reversed(tape) if r.get("call") and _before_open(r)), None)
     if published_call and today >= first_trade and not offline:
         fc = first_close(deal["symbol"], first_trade)

@@ -58,7 +58,7 @@ jobs:
         if: steps.done.outputs.stage != 'scored'
         id: track
         run: |
-          uv run ipo-price-model track --deal tracker/ant.json | tee track.log
+          set -o pipefail; uv run ipo-price-model track --deal tracker/ant.json | tee track.log
           echo "headline=$(head -1 track.log)" >> "$GITHUB_OUTPUT"
 
       - name: Commit the record
