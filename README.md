@@ -5,6 +5,11 @@
 [![live demo](https://img.shields.io/badge/live%20demo-ANT-2e8bd0)](https://henryzhangpku.github.io/ipo-price-model/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
+> **Concluded 2026-11-19.** Anthropic (ANT) priced at $83 and closed its first day at $97.17 (+17.1%), inside the 80% band
+> published before the first trade ($90.19 to $109.86; point +25.8%, about 7% above the close). Tracking has stopped and
+> this repository is archived; the tape, the frozen model and the live page stay as the record.
+> Scoring commit: [43b8d4e](https://github.com/henryzhangpku/ipo-price-model/commit/43b8d4e).
+
 **Price a company the day before it trades, and know when not to.**
 
 The night before a listing opens, the public record is thin: an offer price, a
